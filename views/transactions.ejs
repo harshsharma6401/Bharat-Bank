@@ -1,0 +1,50 @@
+<html lang="en">
+<%-include("./partials/head.ejs") %>
+<body>
+  
+    <%- include('./partials/nav.ejs') %>
+ 
+    <div class="user-table">
+        <table id="customers">
+            <thead>
+            <tr>
+              <th>Account Number</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Current Balance</th>
+              <th>Transaction details</th>
+            </tr>
+        </thead>
+           
+           <tbody>
+           
+            <% if(users.length > 0) { %>
+        
+                <% users.forEach(user => { %>
+                  
+                    <tr>
+                        <td ><%=  user.accountNumber %></td>
+                        <td><%=  user.name %></td>
+                        <td><%=  user.email %></td>
+                        <td><%=  user.balance %></td>
+                        <td><%=  user.updatedAt %></td>
+                    </tr>
+        
+                <% }) %>
+                <% }  
+                else {%> 
+                    <p>There are no users to display... </p>
+                   
+                <% } %>
+        
+                
+
+        </tbody>
+    
+</table>
+</div>
+      
+<%- include('./partials/foot.ejs') %>
+
+</body>
+</html>

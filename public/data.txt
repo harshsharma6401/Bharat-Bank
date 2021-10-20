@@ -1,0 +1,52 @@
+   </div>
+      <button type="button" id ="Check-btn" class=" btn btn-dark btn-lg download-btn">  <i class="fab fa-apple"></i> Download
+      </button>
+  <script>
+      let check_btn = document.getElementById("Check-btn");
+      check_btn.addEventListener('click', function (){
+      swal({
+        title: "Login",
+        text: "You are not logged in!",
+        icon: "error",
+        button: "OK",
+      });
+    });
+</script>
+
+//  closeOnClickOutside: false, //Adding this the alert will not go unless you click/type in alert 
+//  closeOnEsc: false, //Decide whether the user should be able to dismiss the modal by hitting the ESC key, or not.
+
+ <script>
+      let check_btn = document.getElementById("Check-btn");
+      check_btn.addEventListener('click', function (){
+      swal({
+        title: "Login",
+        text: "You are not logged in!",
+        icon: "error",
+        buttons: [ "Login","Cancel"],
+        closeOnClickOutside: false,
+      });
+    });
+</script>
+
+
+    <script>
+      let check_btn = document.getElementById("Check-btn");
+      check_btn.addEventListener("click", function () {
+        swal({
+          title: "Login",
+          text: "You are not logged in!",
+          content: {
+            element: "input",
+            attributes: {
+              placeholder: "Enter your Email ",
+              type: "text",    // For password write "password" here
+            },
+          },
+          icon: "error",
+          buttons: ["Login", "Cancel"],
+        closeOnClickOutside: false,
+        });
+      });
+    </script>
+    

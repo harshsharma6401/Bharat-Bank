@@ -1,0 +1,38 @@
+<html lang="en">
+<%-include("./partials/head.ejs") %> 
+
+<body>
+  
+    <%- include('./partials/nav.ejs') %>
+ 
+
+    <div class="create-user">
+        <div class="add-head">
+            <h1>Add User</h1>
+        </div>
+        <form action="/view-users" method ="POST">
+            
+            <label for="accountNumber">Account number : </label>
+            <input type="number" id="accountNumber" placeholder ="98xxx" name ="accountNumber" required>
+
+            <label for="name" >Name:</label>
+            <input type="text" id="name" placeholder ="John doe" name ="name" required>
+
+            <label for="email" >Email:</label>
+            <input type="text" id="email" placeholder ="John@email.com" name ="email" required>
+
+            <label for=" balance">Current balance : </label>
+            <input type="number" id="balance"  placeholder ="1000" name ="balance" required>
+
+             <input type="submit" name='submit' data-onsuccess="onSignIn"> <!-- <button>Submit</button>  -->
+        </form>
+    </div>
+ 
+    <div class="g-signin2" data-onsuccess="onSignIn" target="_blank"></div>    
+
+            
+  
+<%- include('./partials/foot.ejs') %>
+    
+</body>
+</html>

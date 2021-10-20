@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%-include("./partials/head.ejs") %>
+<body>
+  <%- include('./partials/nav.ejs') %>
+
+<!-- <h1>  <%= myuser.name %>      </h1>
+
+<img src="<%= myuser.picture%>" referrerpolicy="no-referrer"  alt="" srcset="">
+
+
+  <%= myclient.accountNumber %>
+  <%=  myclient.name %>
+  <%=  myclient.email %>
+  <%=  myclient.balance %> -->
+
+
+
+  <div class="card user-dashboard" style="width: 18rem;">
+    <!-- <img  src="<%= myuser.picture%>" referrerpolicy="no-referrer" class="card-img-top" alt="..."> -->
+    <div class="card-body">
+      <img  src="<%= myuser.picture%>" referrerpolicy="no-referrer" class="card-img-top" alt="...">
+      <br>
+      <h5 class="card-title">  <strong><%=  myclient.name %>  </strong> </h5>
+      <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item"> <strong>  Account Number </strong><br><%= myclient.accountNumber %></li>
+      <li class="list-group-item"><strong>Account Balance </strong><br>  <%=  myclient.balance %></li>
+      <li class="list-group-item"><strong>Account email </strong> <br><%=  myclient.email %> </li>
+    </ul>
+    <div class="card-body"> 
+     <a href="/logout" class="card-link btn btn-success"  >Sign Out</a>   <!--onclick="signOut()" -->
+    </div>
+  </div>
+  
+
+<!-- <a href="#" onclick="signOut();" >Sign out</a>  -->
+<script>
+ function signOut() {
+   var auth2 = gapi.auth2.getAuthInstance();
+   auth2.signOut().then(function () {
+     console.log("User signed out.");
+   });
+ }
+
+</script>
+
+<%- include('./partials/foot.ejs') %>
+</body>
+</html>

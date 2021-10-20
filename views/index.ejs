@@ -1,0 +1,94 @@
+<html lang="en">
+  <%-include("./partials/head.ejs") %>
+  <body>
+    <%- include('./partials/nav.ejs') %>
+    <div class="row content-start">
+      <div class="col-lg-6">
+        <h1 class="title-heading">Grow Your Money WITH PURPOSE.</h1>
+        <div class="sub-heading">
+          <h3>
+            A bank isn’t just a place to park your money. With us, earn higher
+            rates, pay lower fees and help support your community.
+          </h3>
+        </div>
+        <button
+          type="button"
+          onclick="window.location.href = 'https://github.com/harshsharma6401'"
+          class="btn btn-dark btn-lg download-btn"
+        >
+          <i class="fab fa-apple"></i> Download
+        </button>
+        <button
+          type="button"
+          onclick="window.location.href = 'https://github.com/harshsharma6401'"
+          class="btn btn-outline-light btn-lg download-btn"
+        >
+          <i class="fab fa-google-play"></i> Download
+        </button>
+      </div>
+
+      <div class="col-lg-6 head-img">
+        <img class="header-img" src="/images/multiple img.jpg" />
+      </div>
+    </div>
+    <button
+      type="button"
+      id="Check-btn"
+      class="btn btn-dark btn-lg download-btn"
+    >
+      <i class="fab fa-apple"></i> Download
+    </button>
+
+    <script>
+
+let check_btn = document.getElementById("Check-btn");
+
+check_btn.addEventListener("click", function () {
+
+
+let token =  localStorage.getItem('token');
+
+console.log(token);
+  if(!token){
+    //Redirect to login page, no user entity available in sessionStorage
+    swal({
+        title: "Login",
+        text: "You are not logged in!",
+        icon: "error",
+        button: "OK",
+      });
+  } else {
+    //User already logged in
+    swal({
+  title: "Good job!",
+  text: "You are logged in!",
+  icon: "success",
+});
+  }
+  });
+      
+      // let check_btn = document.getElementById("Check-btn");
+      // check_btn.addEventListener("click", function () {
+      //   swal({
+      //     title: "Login",
+      //     text: "You are not logged in!",
+      //     content: {
+      //       element: "input",
+      //       attributes: {
+      //         placeholder: "Enter your Email ",
+      //         type: "text",
+      //       },
+      //     },
+      //     icon: "error",
+      //     buttons: ["Login", "Cancel"],
+      //     closeOnClickOutside: false,
+      //   }).then((value) => {
+      //   swal(`You typed: ${value}`);
+      //   });
+      // });
+    </script>
+
+
+    <%- include('./partials/foot.ejs') %>
+  </body>
+</html>
