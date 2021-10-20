@@ -31,13 +31,48 @@
         <img class="header-img" src="/images/multiple img.jpg" />
       </div>
     </div>
-    <button
-      type="button"
-      id="Check-btn"
-      class="btn btn-dark btn-lg download-btn"
-    >
-      <i class="fab fa-apple"></i> Download
-    </button>
+
+    
+    <!-- <a href="/checksignin" class="card-link btn btn-success"> Check here </a> -->
+    <a class="card-link btn btn-success" onclick="checkSignIn()"> Check here </a>
+
+    <script>
+      function checkSignIn() {  
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", "/checksignin");
+        xhr.setRequestHeader(
+          "Content-Type",
+          "application/json"
+        );
+          xhr.onload = function () {
+          console.log("Signed in as: " + xhr.responseText);
+          if(xhr.responseText == 'No token')
+          {
+              swal({
+              title: "Login",
+              text: "You are not logged in!",
+              icon: "error",
+              button: "OK",
+              closeOnClickOutside: false,
+            });
+          }
+          else
+          {
+            swal({
+              title: "Login",
+              text: "You are logged in!",
+              icon: "success",
+              button: "OK",
+              closeOnClickOutside: false,
+            });
+          }
+        };
+        xhr.send('No');
+        
+      }
+    </script>
+
+<!--     
 
     <script>
 
@@ -67,27 +102,8 @@ console.log(token);
   }
   });
       
-      // let check_btn = document.getElementById("Check-btn");
-      // check_btn.addEventListener("click", function () {
-      //   swal({
-      //     title: "Login",
-      //     text: "You are not logged in!",
-      //     content: {
-      //       element: "input",
-      //       attributes: {
-      //         placeholder: "Enter your Email ",
-      //         type: "text",
-      //       },
-      //     },
-      //     icon: "error",
-      //     buttons: ["Login", "Cancel"],
-      //     closeOnClickOutside: false,
-      //   }).then((value) => {
-      //   swal(`You typed: ${value}`);
-      //   });
-      // });
     </script>
-
+ -->
 
     <%- include('./partials/foot.ejs') %>
   </body>

@@ -41,7 +41,7 @@ app.get('/', (req, res) => {
 });
 
 // This will directly transfer to login if not logged in
-app.get('/transfer-money',checkAuthenticated,  (req, res) => {
+app.get('/transfer-money', (req, res) => {
   res.render('transfer-money',{title:'Transfer'});
 });
 
@@ -87,10 +87,10 @@ app.post('/view-users',(req,res)=>{
   
   });
 
-  app.post('/transfer',async (req,res)=>{
+  app.post('/transfer',checkAuthenticated2,async (req,res)=>{
 
     const { sender, reciever, amount } = req.body;
-
+    
     console.log(req.body);
     const sendid = sender;
 
@@ -108,12 +108,18 @@ app.post('/view-users',(req,res)=>{
       res.render("payment-failure", { title: "No User" });
     }
 
-    console.log('Success');
 
     if ( senderUser.balance < amount  ||  amount < 0 ) {
       res.render("payment-failure", { title: "Not Enough" });
     }
 
+    if(req.user.email != senderUser.email){
+
+    console.log("Invalid ",senderUser.email,req.user.email);
+    res.render("payment-failure", { title: "Not logged in" });
+
+    }
+    console.log('Success');
 
     senderUser.balance = senderUser.balance - Number(amount);
     transferUser.balance = transferUser.balance + Number(amount);
@@ -161,7 +167,7 @@ app.get('/login',(req,res)=>{
 
 app.post('/login',(req,res)=>{
   let token = req.body.token;
-  console.log(token);
+  //console.log(token);
 
   async function verify() {
       const ticket = await client.verifyIdToken({
@@ -193,8 +199,10 @@ app.get('/protectedroute',checkAuthenticated2,(req,res)=>{
   res.render(__dirname + '/views/protectedroute',{title : "protectedroute" ,myuser:req.user});
 });
 
-app.get('/logout',(req,res)=>{
+app.get('/logout',checkAuthenticated,(req,res)=>{
 
+  let myuser = req.user;
+  console.log(myuser);
   async function asyncCall() {
       async function deleteCookie()
       { 
@@ -207,12 +215,48 @@ app.get('/logout',(req,res)=>{
         res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
       }
       await deleteCookie();
-     
+
     }
     asyncCall();
- //res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
- // signOut();
+    
   res.redirect('/login');
+});
+
+app.get('/checksignin',(req,res)=>{
+
+  //let my user =  req.user;
+  let token = req.cookies['session-token'];
+  if(!token)
+  {
+    console.log("No token ");
+    res.send('No token');
+  }
+  else
+  {
+  //console.log(token);
+  
+  let user = {};
+  async function verify() {
+      const ticket = await client.verifyIdToken({
+          idToken: token,
+          audience: CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
+      });
+      const payload = ticket.getPayload();
+      user.name = payload.name;
+      user.email = payload.email;
+      user.picture = payload.picture;
+    }
+    verify()
+    .then(()=>{
+        req.user = user;
+        console.log(req.user);
+        res.redirect('/login');
+       // res.redirect('/login');
+    })
+    .catch(err=>{
+      res.redirect('/login');
+    })
+  }
 });
 
 function checkAuthenticated(req, res, next){
@@ -275,12 +319,6 @@ function checkAuthenticated2(req, res, next){
         next();
     })
     .catch(err=>{
-      swal({
-        title: "Login",
-        text: "You are not logged in!",
-        icon: "error",
-        button: "OK",
-      });
         res.redirect('/login')
     })
 

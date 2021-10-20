@@ -30,7 +30,37 @@
  
     <div class="g-signin2" data-onsuccess="onSignIn" target="_blank"></div>    
 
-            
+    <script>
+        function checkSignIn() {  
+          var xhr = new XMLHttpRequest();
+          xhr.open("GET", "/checksignin");
+          xhr.setRequestHeader(
+            "Content-Type",
+            "application/json"
+          );
+            xhr.onload = function () {
+            console.log("Signed in as: " + xhr.responseText);
+            if(xhr.responseText == 'No token')
+            {
+                
+                swal({
+                title: "Login",
+                text: "You are not logged in! Kindly login to Add User",
+                icon: "warning",
+                button: "OK",
+                closeOnClickOutside: false,
+                });
+            }
+            else
+            {
+                //User is logged in
+            }
+          };
+          xhr.send('No');
+          
+        }
+        checkSignIn();
+      </script>
   
 <%- include('./partials/foot.ejs') %>
     

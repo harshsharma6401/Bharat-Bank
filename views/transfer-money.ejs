@@ -26,6 +26,47 @@
     <a href="/logout" class="card-link btn btn-success" onclick="signOut()"  >Sign Out</a>
   </div>
 
+
+  <script>
+    function checkSignIn() {  
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", "/checksignin");
+      xhr.setRequestHeader(
+        "Content-Type",
+        "application/json"
+      );
+        xhr.onload = function () {
+        console.log("Signed in as: " + xhr.responseText);
+        if(xhr.responseText == 'No token')
+        {
+            
+            swal({
+            title: "Login",
+            text: "You are not logged in! Kindly login to transfer money",
+            icon: "error",
+            button: "OK",
+            closeOnClickOutside: false,
+            });
+        }
+        else
+        {
+        //   swal({
+        //     title: "Login",
+        //     text: "You are logged in!",
+        //     icon: "success",
+        //     button: "OK",
+        //     closeOnClickOutside: false,
+        //   });
+        
+        }
+      };
+      xhr.send('No');
+      
+    }
+    checkSignIn();
+  </script>
+
+
 <%- include('./partials/foot.ejs') %>
     
 </body>
