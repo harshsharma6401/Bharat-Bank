@@ -1,9 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Racing+Sans+One&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Abhaya+Libre:wght@500;700&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Dosis:wght@200;300;400;600;700;800&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@800&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Old+Standard+TT:wght@700&display=swap');
 body{
     font-family: 'Merriweather', serif;
+    font-family: 'Dosis', sans-serif;
 }
  .logoimg{
     margin:0% 10%;
@@ -20,7 +23,8 @@ nav{
     font-size: 1.15rem;
      background-color: #1D2D50;
      box-shadow: -1px 19px 18px rgb(21 11 35 / 10%);
-    
+     font-family: 'Merriweather', serif;
+     font-weight:400;
 }
 .container-fluid{
   padding: 3% 3.5%;
@@ -35,8 +39,10 @@ nav{
     padding-left: 1rem;
 }
  .navbar-brand{
-    font-size: 2rem;
+    font-size: 2.5rem;
     color:#fff;
+    font-family: 'Old Standard TT', serif;
+  
 }
 a.navbar-brand:hover ,.active:hover{
     color:#fff;
@@ -49,7 +55,7 @@ a.navbar-brand:hover ,.active:hover{
     background-color:#39A2DB;
     border-radius: 10px;
     color: #fff;
-    box-shadow: 1px 3px 9px #fff;
+    box-shadow: 1px 1px 9px #fff;
     
   }
   a:visited,a:active{
@@ -62,7 +68,7 @@ a.navbar-brand:hover ,.active:hover{
   height: unset;
   width:unset;
  }
-  
+
 
 .content-start{
    margin: 0%;
@@ -70,9 +76,11 @@ a.navbar-brand:hover ,.active:hover{
    background-color: #1D2D50;
   width:100%;
   color:white;
+  font-family: 'Merriweather', serif;
 }
 
 h1.title-heading{
+  font-family: 'Merriweather', serif;
   font-weight: 900;
   font-size: 3em;
   line-height: 1.5;
@@ -149,7 +157,7 @@ padding: 6% 5%;
   border-radius: 10px;
   margin: 3% 6%;
   color:white;
-  font-family: 'Abhaya Libre', serif;
+  /* //font-family: 'Abhaya Libre', serif; */
 }
 .create-user input[type=text], input[type=number] {
   width: 100%;
@@ -159,7 +167,7 @@ padding: 6% 5%;
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
-  font-family: 'Abhaya Libre', serif;
+  /* font-family: 'Abhaya Libre', serif; */
 }
 
 .create-user input[type=submit] {
@@ -254,11 +262,16 @@ margin: 10%;
   @media screen and (max-width: 767px) {
     .logoimg{
       margin: 0% 1%;
+      width : 4.5rem;
       
     }
-    .navbar-brand {
-      font-size: 1.6rem;
+    .custom-toggler, .navbar-toggler-icon {
+      font-size: 1.25rem;
     }
+    .navbar-brand {
+      font-size: 2.15rem;
+    }
+    
     .navbar-nav .nav-link {
       text-align: center;
       width:50%;
@@ -271,20 +284,63 @@ margin: 10%;
     width:50%;
     margin: 1% 24%;
   }
+  h1.title-heading
+  {
+    font-size: 2rem;
+  }
+  .sub-heading h3
+  {
+    font-size: 1rem;
+  }
   .header-img{
     width:80%;
-    margin: 2% 9%;
+    /* margin: 2% 9%; */
   }
-  .fot-icons i {
-    font-size: 1.25rem;
+ Button.btn-lg,.download-btn{
+  padding:0.25rem 0.5rem;
+  font-size: 0.9rem;
+  border-radius : 0.2rem;
+
+  }
+
+  .create-user {
+    padding: 2% 3%;
+    width: 70%;
+    margin: 10% 15%;
+  }
+
+  .add-head{
+    margin:10% 6%;
+  }
+  
+  #footer{
+    font-size: 0.65rem;
+  }
+   .swal-modal{
+    
+    width: 65%;
+   
 }
+
    .user-table{
      
      margin: 3% 0%;
      overflow-x: auto;
      padding: 4% 0%;
    }
-   
+   #customers td, #customers th {
+    padding :4px;
+    font-size: 0.5rem;
+    }
+    #customers th{
+      font-family: 'Abhaya Libre';
+    }
+
+    .user-dashboard{
+      width : 60%!important; 
+      margin: 5% 20%;
+    }
+
   }
   @media screen and (min-width: 768px) and (max-width: 991px){
     .navbar-nav .nav-link {

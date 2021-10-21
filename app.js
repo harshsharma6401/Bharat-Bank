@@ -74,6 +74,7 @@ app.get('/Adduser', (req, res) => {
   });
 
    app.get('/view-users', (req, res) => {
+    
       res.redirect('all-users');
   });
 
@@ -112,24 +113,26 @@ app.post('/view-users',(req,res)=>{
 
     }
     catch (err) {
-      res.render("payment-failure", { title: "Something went wrong" });
+      res.render("payment-failure", { title: "Something went wrong" , message : "Something went wrong" });
     }
 
     if (!senderUser || !transferUser) {
-      res.render("payment-failure", { title: "No User" });
+      res.render("payment-failure", { title: "No User", message : "User not Found. Please check and try again!"  });
     }
 
 
-    if ( senderUser.balance < amount  ||  amount < 0 ) {
-      res.render("payment-failure", { title: "Not Enough" });
+    else if ( senderUser.balance < amount  ||  amount < 0 ) {
+      res.render("payment-failure", { title: "Not Enough", message : "Amount entered is more than balance."  });
     }
 
-    if(req.user.email != senderUser.email){
+    else if(req.user.email != senderUser.email){
 
     console.log("Invalid ",senderUser.email,req.user.email);
-    res.render("payment-failure", { title: "Not logged in" });
+    res.render("payment-failure", { title: "Not logged in" , message : "Please login with your registered email address."});
 
     }
+    else
+    { 
     console.log('Success');
 
     senderUser.balance = senderUser.balance - Number(amount);
@@ -140,12 +143,12 @@ app.post('/view-users',(req,res)=>{
       savedtransferUser = await transferUser.save();
     }
     catch (err) {
-      res.render("payment-failure", { title: "Smthng2" });
+      res.render("payment-failure", { title: "Smthng2", message : "Something went wrong. Please try again !" });
     }
+    let currency = '₹';
+    res.render("payment-success", { title: "Transaction successful" ,message: `Your balance is ${currency} ${savedsenderUser.balance}.`});
 
-    res.render("payment-success", { title: "Transaction successful" });
-
-
+  }
     });
 
   app.get('/all-users', (req, res) => {
