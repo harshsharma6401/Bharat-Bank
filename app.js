@@ -18,6 +18,9 @@ mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
 .then((result)=> app.listen(port))
 .catch((err)=> console.log(err));
 
+mongoose.set('useNewUrlParser', true);
+mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
 
 app.use(morgan('dev'));
 app.set('view engine','ejs');
@@ -26,10 +29,11 @@ app.use(express.urlencoded({extended:false}));
 app.use(express.json());
 app.use(cookieParser());
 //everytime you use the browser back button, the page is reloaded and not cached. (Restricted  to go to protected routes after logout )
-app.use(function(req, res, next) {
+ app.use(function(req, res, next) {
     res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-    next();
-  });
+     next();
+   });
+
 
 
 app.get('/', (req, res) => {
@@ -82,7 +86,14 @@ app.post('/view-users',(req,res)=>{
     res.redirect('/all-users');     
   })
   .catch((err)=>{
-      console.log(err);
+
+     console.log(err);
+      if(err.code == '11000')
+      {
+      console.log("Cannot add duplicate user");
+      res.render('404',{title :'404', message :"Cannot add duplicate user"});
+      }
+    
   })
   
   });
@@ -250,11 +261,13 @@ app.get('/checksignin',(req,res)=>{
     .then(()=>{
         req.user = user;
         console.log(req.user);
-        res.redirect('/login');
+        res.send(user.email);
+        //res.redirect('/login');
        // res.redirect('/login');
     })
     .catch(err=>{
-      res.redirect('/login');
+      res.send('No token');
+    //  res.redirect('/login');
     })
   }
 });
@@ -302,10 +315,10 @@ function checkAuthenticated2(req, res, next){
       await User.findOne({email : username},(error,result)=>{
         if(error || result ==null)
         {
-          res.render('404', { title: 'User Not Found' ,message : 'User not found in database'});
+          res.render('404', { title: 'User Not Found' ,message : 'This user is not added in the database.'});
         }
         else
-        {
+        { 
           console.log(result);
           user.accountNumber  = result.accountNumber;
           user.balance = result.balance;

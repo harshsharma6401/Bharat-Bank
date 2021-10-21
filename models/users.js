@@ -5,7 +5,8 @@ const userSchema = new Schema({
 
     accountNumber:{
         type: Number,
-        required: true   
+        required: true,
+        unique: true   
     },
     name:{
         type: String,
@@ -13,7 +14,8 @@ const userSchema = new Schema({
     },
     email:{
         type: String,
-        required: true   
+        required: true,
+        unique: true   
     }, 
     balance:{
         type: Number,

@@ -28,7 +28,7 @@
           {
             signOut();
             location.assign('/dashboard');
-            res.set({'Cache-Control': 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0'});
+            //res.set({'Cache-Control': 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0'});
           }
           
 
@@ -42,9 +42,7 @@
       function signOut() {
 
         var auth2 = gapi.auth2.getAuthInstance();
-
         //console.log(auth2);
-        console.log("User signning out.");
         auth2.signOut().then(function () {
        //   localStorage.removeItem('token');
           console.log("User signed out.");
