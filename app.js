@@ -233,7 +233,7 @@ app.get('/logout',checkAuthenticated,(req,res)=>{
     }
     asyncCall();
     
-  res.redirect('/login');
+    res.redirect('/');
 });
 
 app.get('/checksignin',(req,res)=>{
@@ -335,7 +335,7 @@ function checkAuthenticated2(req, res, next){
         next();
     })
     .catch(err=>{
-        res.redirect('/login')
+        res.redirect('/login');
     })
 
 }

@@ -9,11 +9,11 @@
 <form action="/transfer" method ="POST">
     
     <label for="accountNumber"> Account number  of Sender: </label>
-    <input type="number" id="accountNumber" placeholder="98xxx" name ="sender" required>
+    <input type="number" id="accountNumber" placeholder="98xxxx" name ="sender" required>
 
      
     <label for="accountNumber"> Account number of Reciever : </label>
-    <input type="number" id="accountNumber" placeholder="98xxx" name ="reciever" required>
+    <input type="number" id="accountNumber" placeholder="98xxxx" name ="reciever" required>
 
 
     <label for=" amount">Amount : </label>
@@ -22,9 +22,6 @@
 </form>
 </div>
 
-<div class="card-body"> 
-    <a href="/logout" class="card-link btn btn-success" onclick="signOut()"  >Sign Out</a>
-  </div>
 
 
   <script>
@@ -42,7 +39,7 @@
             
             swal({
             title: "Login",
-            text: "You are not logged in! Kindly login to transfer money",
+            text:  "You are not logged in! ",
             icon: "error",
             button: "OK",
             closeOnClickOutside: false,

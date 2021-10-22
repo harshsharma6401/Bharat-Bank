@@ -37,7 +37,7 @@
     <!-- <a href="/checksignin" class="card-link btn btn-success"> Check here </a> -->
     <a class="card-link btn btn-success" onclick="checkSignIn()"> Check here </a>
 
-    <script>
+    <!-- <script>
       function checkSignIn() {  
         var xhr = new XMLHttpRequest();
         xhr.open("GET", "/checksignin");
@@ -71,40 +71,8 @@
         xhr.send('No');
         
       }
-    </script>
+    </script> -->
 
-<!--     
-
-    <script>
-
-let check_btn = document.getElementById("Check-btn");
-
-check_btn.addEventListener("click", function () {
-
-
-let token =  localStorage.getItem('token');
-
-console.log(token);
-  if(!token){
-    //Redirect to login page, no user entity available in sessionStorage
-    swal({
-        title: "Login",
-        text: "You are not logged in!",
-        icon: "error",
-        button: "OK",
-      });
-  } else {
-    //User already logged in
-    swal({
-  title: "Good job!",
-  text: "You are logged in!",
-  icon: "success",
-});
-  }
-  });
-      
-    </script>
- -->
 
     <%- include('./partials/foot.ejs') %>
   </body>

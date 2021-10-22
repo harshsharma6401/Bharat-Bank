@@ -1,4 +1,4 @@
-
+app.use("/static", express.static('./static/'));
     function onSignIn(googleUser) {
       var id_token = googleUser.getAuthResponse().id_token;
       localStorage.setItem('token',id_token);
@@ -31,3 +31,36 @@
       });
     }
 
+    function checkSignIn() {  
+      var xhr = new XMLHttpRequest();
+      xhr.open("GET", "/checksignin");
+      xhr.setRequestHeader(
+        "Content-Type",
+        "application/json"
+      );
+        xhr.onload = function () {
+        console.log("Signed in as: " + xhr.responseText);
+        if(xhr.responseText == 'No token')
+        {
+            swal({
+            title: "Login",
+            text: "You are not logged in!",
+            icon: "error",
+            button: "OK",
+            closeOnClickOutside: false,
+          });
+        }
+        else
+        {
+          swal({
+            title: "Login",
+            text: "You are logged in!",
+            icon: "success",
+            button: "OK",
+            closeOnClickOutside: false,
+          });
+        }
+      };
+      xhr.send('No');
+      
+    }
