@@ -19,6 +19,7 @@
     "mongoose": "^5.13.11",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.13",
-    "sweetalert": "^2.1.2"
+    "sweetalert": "^2.1.2",
+    "uuid": "^8.3.2"
   }
 }

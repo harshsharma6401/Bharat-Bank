@@ -1,4 +1,5 @@
-<html lang="en">
+
+ <html lang="en">
 <%-include("./partials/head.ejs") %>
 <body>
   
@@ -27,7 +28,7 @@
                         <td><%=  user.name %></td>
                         <td><%=  user.email %></td>
                         <td><%=  user.balance %></td>
-                        <td><%=  user.updatedAt %></td>
+                        <td><%=   user.updatedAt.getHours()  + ":" +user.updatedAt.getMinutes() + ":" +user.updatedAt.getSeconds()%> <br> <%=  user.updatedAt.toDateString() %></td>
                     </tr>
         
                 <% }) %>
@@ -43,8 +44,11 @@
     
 </table>
 </div>
-      
+
+
 <%- include('./partials/foot.ejs') %>
+
+
 
 </body>
 </html>

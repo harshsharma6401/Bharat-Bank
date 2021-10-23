@@ -8,9 +8,9 @@
 
     <div class="create-user">
         <div class="add-head">
-            <h1>ADD USER</h1>
+            <h1>REGISTER ACCOUNT</h1>
         </div>
-        <form action="/view-users" method ="POST">
+        <form action="/view-users" method ="POST" onsubmit="return checkBeforeSubmit()">
             
             <label for="accountNumber">Account number : </label>
             <input type="number" id="accountNumber" placeholder ="98xxxx" name ="accountNumber" required>

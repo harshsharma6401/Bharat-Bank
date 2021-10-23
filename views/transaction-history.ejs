@@ -7,33 +7,45 @@
     <div class="user-table">
         <table id="customers">
             <thead>
+                <tr>
+                  <th colspan="2">Sender  </th>
+                  <th colspan="2">User </th>
+                  <th colspan="3">Details </th>
+                </tr>
+            </thead>
+            <thead>
             <tr>
-              <th>Account Number</th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Current Balance</th>
-              <th>Transaction details</th>
+              <th>Account Number </th>
+              <th>Name of Sender </th>
+              <th>Account Number </th>
+              <th>Name of Reciever </th>
+              <th>Amount</th>
+              <th>Timestamp</th>
+              <th>Transaction ID</th>
             </tr>
         </thead>
            
            <tbody>
            
-            <% if(users.length > 0) { %>
+
+            <% if(transactions.length > 0) { %>
         
-                <% users.forEach(user => { %>
+                <% transactions.forEach(transaction => { %>
                   
                     <tr>
-                        <td ><%=  user.accountNumber %></td>
-                        <td><%=  user.name %></td>
-                        <td><%=  user.email %></td>
-                        <td><%=  user.balance %></td>
-                        <td><%=   user.updatedAt.getHours()  + ":" +user.updatedAt.getMinutes() + ":" +user.updatedAt.getSeconds()%> <br> <%=  user.updatedAt.toDateString() %></td>
+                        <td ><%=  transaction.accountNumber1 %></td>
+                        <td><%=  transaction.name1 %></td>
+                        <td ><%=  transaction.accountNumber2 %></td>
+                        <td><%=  transaction.name2 %></td>
+                        <td><%=  transaction.amount %></td>
+                        <td><%=  transaction.updatedAt.getHours()  + ":" + transaction.updatedAt.getMinutes() + ":" + transaction.updatedAt.getSeconds()%> <br> <%=   transaction.updatedAt.toDateString() %></td>
+                        <td><%=  transaction.transactionID.slice(0, 23)%></td>
                     </tr>
         
                 <% }) %>
                 <% }  
                 else {%> 
-                    <p>There are no users to display... </p>
+                    <p>There are no transactions to display... </p>
                    
                 <% } %>
         
@@ -43,11 +55,8 @@
     
 </table>
 </div>
-
-
+      
 <%- include('./partials/foot.ejs') %>
-
-
 
 </body>
 </html>

@@ -3,7 +3,9 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 const cookieParser = require("cookie-parser");
 const User = require('./models/users');
+const Transaction = require('./models/transactions');
 const swal = require('sweetalert');
+const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -145,9 +147,30 @@ app.post('/view-users',(req,res)=>{
     catch (err) {
       res.render("payment-failure", { title: "Smthng2", message : "Something went wrong. Please try again !" });
     }
-    let currency = '₹';
-    res.render("payment-success", { title: "Transaction successful" ,message: `Your balance is ${currency} ${savedsenderUser.balance}.`});
 
+    let currency = '₹';
+
+    const Amount = amount;
+    const transaction_id = uuidv4();
+
+    const transaction = new Transaction({
+     transactionID : transaction_id,
+     accountNumber1: savedsenderUser.accountNumber,
+     name1: savedsenderUser.name,
+     accountNumber2: savedtransferUser.accountNumber,
+     name2: savedtransferUser.name,
+     amount: Amount
+     });  
+     
+
+     await transaction.save()
+    .then((result)=>{
+    res.render("payment-success", { title: "Transaction successful" ,message: `Your balance is ${currency} ${savedsenderUser.balance}.`});
+    })
+    .catch((err)=>{
+     console.log(err);
+     res.render("payment-failure", { title: "Something went wrong" , message : "Transaction cannot be saved in the database" });
+    })
   }
     });
 
@@ -161,16 +184,26 @@ app.post('/view-users',(req,res)=>{
       });
   });
 
-  app.get('/transaction-history', (req, res) => {
+  app.get('/transac-history', (req, res) => {
     //  console.log(req.body);
   User.find()
   .then((result)=>{
-    res.render('transaction-history', { users: result, title: 'Transactions' });     
+    res.render('transac-history', { users: result, title: 'Transactions' });     
   })
   .catch((err)=>{
       res.render('404', { title: 'User Not Found', message :"Something went wrong"});
      // console.log(err);
   })
+});
+
+app.get('/transaction-history', (req, res) => {
+  Transaction.find()
+    .then(result => {
+      res.render(__dirname + '/views/transaction-history', { transactions: result, title: 'Transactions' });
+    })
+    .catch(err => {
+      console.log(err);
+    });
 });
 
 

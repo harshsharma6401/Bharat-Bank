@@ -6,7 +6,7 @@
  
 </div>
 <div class="create-user">
-<form action="/transfer" method ="POST">
+<form action="/transfer" method ="POST" onsubmit="return checkBeforeSubmit()">
     
     <label for="accountNumber"> Account number  of Sender: </label>
     <input type="number" id="accountNumber" placeholder="98xxxx" name ="sender" required>
@@ -18,7 +18,7 @@
 
     <label for=" amount">Amount : </label>
     <input type="number" id="balance" placeholder="1000" name ="amount" required>
-    <input type="submit" name='submit'> <!-- <button>Submit</button>  -->
+    <input type="submit" name='submit' > <!-- <button>Submit</button> onfocus="checkSignIn()"  -->
 </form>
 </div>
 
@@ -47,13 +47,13 @@
         }
         else
         {
-        //   swal({
-        //     title: "Login",
-        //     text: "You are logged in!",
-        //     icon: "success",
-        //     button: "OK",
-        //     closeOnClickOutside: false,
-        //   });
+           swal({
+             title: "Login",
+             text: "You are logged in!",
+             icon: "success",
+            button: "OK",
+             closeOnClickOutside: false,
+           });
         
         }
       };
