@@ -58,30 +58,36 @@ app.get('/add-user', (req, res) => {
 
 });
 
-app.get('/Adduser', (req, res) => {
-    const user = new User({
-     accountNumber: '445353',
-     name: 'gfvvfdd',
-     email: 'mnfrbd',
-     balance:'8677'
-    })
+// app.get('/Adduser', (req, res) => {
+//     const user = new User({
+//      accountNumber: '445353',
+//      name: 'gfvvfdd',
+//      email: 'mnfrbd',
+//      balance:'8677'
+//     })
   
-    user.save()
-      .then(result => {
-        res.send(result);
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  });
+//     user.save()
+//       .then(result => {
+//         res.send(result);
+//       })
+//       .catch(err => {
+//         console.log(err);
+//       });
+//   });
 
    app.get('/view-users', (req, res) => {
-    
+  
       res.redirect('all-users');
   });
 
-app.post('/view-users',(req,res)=>{
+app.post('/view-users',async (req,res)=>{
+  
+  let last_user;
 
+  last_user = await User.findOne().sort({ field: 'asc', _id: -1 }).limit(1);
+  console.log(last_user);
+  
+  req.body.accountNumber = last_user.accountNumber + 1;
   const user = new User(req.body);
 
   user.save()
