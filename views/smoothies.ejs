@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%-include("./partials/head.ejs") %>
+ 
+  <body>
+    <%- include('./partials/nav.ejs') %>
+
+<h1>Protected route</h1>
+
+<% if(locals.user) {%>
+  <p> <% const myuser  = user %> <%- myuser%>  </p>
+  
+<%}else {%>
+  <p> <% const user  = myuser %> <%- user%>  </p>
+ <% } %>
+
+
+<div class="card user-dashboard" style="width: 18rem;">
+
+  <div class="card-body">
+    <% if(user.picture)  { %>
+      <img  src="<%= myuser.picture%>" referrerpolicy="no-referrer" class="card-img-top" alt="...">
+     <% } else {%>
+   
+       <img src="/images/user img.png" referrerpolicy="no-referrer" class="card-img-top" alt="...">
+   
+       <% } %>
+    <br>
+    <h5 class="card-title">  <strong><%=  user.name %>  </strong> </h5>
+    <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item"> <strong>  Account Number </strong><br><%= user.accountNumber %></li>
+    <li class="list-group-item"><strong>Account Balance </strong><br>  <%=  user.balance %></li>
+    <li class="list-group-item"><strong>Account email </strong> <br><%=  user.email %> </li>
+  </ul>
+  <div class="card-body"> 
+    <a href="/logout" class="card-link btn btn-success" onclick="signOut()"  >Sign Out</a>
+  </div>
+</div>
+
+
+<%- include('./partials/foot'); -%>

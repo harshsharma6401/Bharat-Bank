@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%-include("./partials/head.ejs") %>
+ 
+  <body>
+    <%- include('./partials/nav.ejs') %>
+    
+    <!-- <div class = "login-pg">
+      <h1 class="login-h1">Login</h1>
+      <div class="g-signin2" data-onsuccess="onSignIn" target="_blank"></div>
+       <button type="button" class="btn btn-dark SignOut-btn" ><a href="/logout">  SignOut </a> <i class="fas fa-sign-out-alt"></i></button>
+      </div> -->
+    
+    <div class="create-user">
+      <form action="" id="login">
+        <!-- <h1 class="add-head"> Login</h1> -->
+        <!-- <img class="login-logo" src="/images/prac3.png" alt="Bharat Bank logo"> -->
+        <div class="login-google"><h1 class="add-head"> Login</h1>
+          
+        <div class="g-signin2" data-width="wide"  data-longtitle="true" data-onsuccess="onSignIn" target="_blank" >
+        </div>
+      </div>
+        <p style="text-align: center; font-size: large; ">  -----------------  OR  -----------------<br> USE YOUR EMAIL ADDRESS </p> 
+          <label for="email"> Email: </label>
+          <input type="text" id="email" placeholder="Enter Username" name ="email" required>
+          <div class="email error"></div>
+          <label for="password"> Password : </label>
+          <input type="password" id="password" placeholder="Enter password" name ="password" required>
+          <div class="password error"></div>
+          <input type="submit" name='submit' > <!-- <button>Submit</button> onfocus="checkSignIn()"  -->
+        
+          
+          
+          
+      </form>
+     
+    </div>
+     
+       
+       
+   
+
+    <!-- <script src="../public/login_f.js"></script> -->
+
+    <script>
+      function onSignIn(googleUser) {
+        var id_token = googleUser.getAuthResponse().id_token;
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/login");
+        xhr.setRequestHeader(
+          "Content-Type",
+          "application/json"
+        );
+          xhr.onload = function () {
+          console.log("Signed in as: " + xhr.responseText);
+          if(xhr.responseText == 'success')
+          {
+            signOut();
+            location.assign('/dashboard');
+            //res.set({'Cache-Control': 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0'});
+          }
+          
+
+        };
+        xhr.send(JSON.stringify({token: id_token}));
+        
+      }
+    </script>
+
+    <script>
+      function signOut() {
+
+        var auth2 = gapi.auth2.getAuthInstance();
+        //console.log(auth2);
+        auth2.signOut().then(function () {
+       //   localStorage.removeItem('token');
+          console.log("User signed out.");
+       
+        });
+
+      }
+      const form = document.querySelector('form');
+    const emailError = document.querySelector('.email.error');  
+    const passwordError = document.querySelector('.password.error');  
+    //get the values
+    form.addEventListener('submit',async (e)=>{
+       
+        
+    e.preventDefault();
+
+    //Reset errors
+    emailError.textContent = '';
+    passwordError.textContent = '';
+
+    const email =  form.email.value;
+    const password = form.password.value;
+
+    console.log(email,password);
+
+    try{
+    const res = await fetch('/login2',{
+
+        method : 'POST',
+        body : JSON.stringify({email,password}), // Eqvivalaent to {email : email , password : password}
+        headers:{'Content-type' : 'application/json'}
+    });
+
+    const data = await res.json();
+    console.log('Data : ' ,data);
+
+    if(data.errors)
+    {
+        emailError.textContent = data.errors.email;
+        passwordError.textContent = data.errors.password;
+    }
+
+    if(data.user){
+        console.log('Data : ',data.user);
+        location.assign('/');
+    }
+
+    }
+    catch(err){
+    console.log(err);
+    }
+
+    
+    });
+    
+     
+
+    </script>
+    <%- include('./partials/foot.ejs') %>
+  </body>
+</html>

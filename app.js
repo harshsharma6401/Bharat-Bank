@@ -1,3 +1,5 @@
+const dotenv =  require('dotenv');
+
 const express = require('express')
 const morgan = require('morgan');
 const mongoose = require('mongoose');
@@ -6,16 +8,27 @@ const User = require('./models/users');
 const Transaction = require('./models/transactions');
 const swal = require('sweetalert');
 const { v4: uuidv4 } = require('uuid');
+dotenv.config({path:'./config.env'});
+
+const authRoutes = require('./routes/authRoutes');
+const {requireAuth,checkUser} = require('./middlewares/authMiddleware');
+
+const basicRoutes = require('./routes/basicRoutes');
 
 const app = express();
 const port = process.env.PORT || 3000;
-const {OAuth2Client} = require('google-auth-library');
-const CLIENT_ID =  '31624390503-udfmvc5bep0ebdss2k4ku812dccrec22.apps.googleusercontent.com';
-const client = new OAuth2Client(CLIENT_ID);
-// app.listen(port);
-//Connect to MongoDb
 
-const dbURI = 'mongodb+srv://HarshSharma:Harsh@bank7654@bank.if57d.mongodb.net/Bank?retryWrites=true&w=majority';
+const {OAuth2Client} = require('google-auth-library');
+
+const CLIENT_ID = process.env.CLIENT_ID;
+const client = new OAuth2Client(CLIENT_ID);
+
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
+const JWT_SECRET = process.env.JWT_SECRET;
+const dbURI = process.env.DATABASE;
+
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
 .then((result)=> app.listen(port))
 .catch((err)=> console.log(err));
@@ -31,226 +44,90 @@ app.use(express.urlencoded({extended:false}));
 app.use(express.json());
 app.use(cookieParser());
 //everytime you use the browser back button, the page is reloaded and not cached. (Restricted  to go to protected routes after logout )
- app.use(function(req, res, next) {
+
+app.use(function(req, res, next) {
     res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
      next();
-   });
+});
 
+app.use(basicRoutes);
+app.use(authRoutes);
 
+app.get('*',checkUser);
 
 app.get('/', (req, res) => {
-     res.render('index',{title:'Home'});
- });
-
- app.get('/index', (req, res) => {
-    res.redirect('/');
+   res.render('index',{title:'Home'});
 });
 
-// This will directly transfer to login if not logged in
-app.get('/transfer-money', (req, res) => {
-  res.render('transfer-money',{title:'Transfer'});
+app.get('/index', (req, res) => {
+  res.redirect('/');
 });
 
+app.post('/modify', async (req, res) => {
+  console.log(req.body);
 
-app.get('/add-user', (req, res) => {
+  const plainTextPassword = req.body.password;
+  const username = req.body.username;
 
-  res.render('add-user',{title:'Add user'});
+  const salt = await bcrypt.genSalt();
+  const set_password  = await bcrypt.hash(plainTextPassword,salt);
+  //const set_password = await bcrypt.hash(plainTextPassword,10);
 
-});
+  console.log(set_password);
 
-// app.get('/Adduser', (req, res) => {
-//     const user = new User({
-//      accountNumber: '445353',
-//      name: 'gfvvfdd',
-//      email: 'mnfrbd',
-//      balance:'8677'
-//     })
+      const response = await User.updateOne (
+          {
+             email :  username
+          },
+          {
+              $set: {
+                 password: set_password
+              }
+          }
+      )
   
-//     user.save()
-//       .then(result => {
-//         res.send(result);
-//       })
-//       .catch(err => {
-//         console.log(err);
-//       });
-//   });
-
-   app.get('/view-users', (req, res) => {
+      console.log(response);
   
-      res.redirect('all-users');
+      res.json({ status: 'ok' })
   });
 
-app.post('/view-users',async (req,res)=>{
+  app.post('/login',(req,res)=>{
+    let token = req.body.token;
+    //console.log(token);
   
-  let last_user;
-
-  last_user = await User.findOne().sort({ field: 'asc', _id: -1 }).limit(1);
-  console.log(last_user);
+    async function verify() {
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: CLIENT_ID,  
+        });
+        const payload = ticket.getPayload();
+        const userid = payload['sub'];
+        // If request specified a G Suite domain:
+        // const domain = payload['hd'];
   
-  req.body.accountNumber = last_user.accountNumber + 1;
-  const user = new User(req.body);
-
-  user.save()
-  .then((result)=>{
-    res.redirect('/all-users');     
-  })
-  .catch((err)=>{
-
-     console.log(err);
-      if(err.code == '11000')
-      {
-      console.log("Cannot add duplicate user");
-      res.render('404',{title :'404', message :"Cannot add duplicate user"});
+        console.log(payload);
+  
       }
-    
-  })
+      verify()
+      .then(()=>{
+        res.cookie('session-token',token);
+        //res.render(__dirname + '/views/add-user',{title:'Add user'});
+        res.send('success');
+      })
+      .catch(console.error);
   
   });
 
-  app.post('/transfer',checkAuthenticated2,async (req,res)=>{
 
-    const { sender, reciever, amount } = req.body;
-    
-    console.log(req.body);
-    const sendid = sender;
-
-    let senderUser, transferUser;
-    try {
-      senderUser = await User.findOne({ accountNumber: sender });
-      transferUser = await User.findOne({ accountNumber: reciever });
-
-    }
-    catch (err) {
-      res.render("payment-failure", { title: "Something went wrong" , message : "Something went wrong" });
-    }
-
-    if (!senderUser || !transferUser) {
-      res.render("payment-failure", { title: "No User", message : "User not Found. Please check and try again!"  });
-    }
-
-
-    else if ( senderUser.balance < amount  ||  amount < 0 ) {
-      res.render("payment-failure", { title: "Not Enough", message : "Amount entered is more than balance."  });
-    }
-
-    else if(req.user.email != senderUser.email){
-
-    console.log("Invalid ",senderUser.email,req.user.email);
-    res.render("payment-failure", { title: "Not logged in" , message : "Please login with your registered email address."});
-
-    }
-    else
-    { 
-    console.log('Success');
-
-    senderUser.balance = senderUser.balance - Number(amount);
-    transferUser.balance = transferUser.balance + Number(amount);
-    let savedsenderUser, savedtransferUser;
-    try {
-      savedsenderUser = await senderUser.save();
-      savedtransferUser = await transferUser.save();
-    }
-    catch (err) {
-      res.render("payment-failure", { title: "Smthng2", message : "Something went wrong. Please try again !" });
-    }
-
-    let currency = '₹';
-
-    const Amount = amount;
-    const transaction_id = uuidv4();
-
-    const transaction = new Transaction({
-     transactionID : transaction_id,
-     accountNumber1: savedsenderUser.accountNumber,
-     name1: savedsenderUser.name,
-     accountNumber2: savedtransferUser.accountNumber,
-     name2: savedtransferUser.name,
-     amount: Amount
-     });  
-     
-
-     await transaction.save()
-    .then((result)=>{
-    res.render("payment-success", { title: "Transaction successful" ,message: `Your balance is ${currency} ${savedsenderUser.balance}.`});
-    })
-    .catch((err)=>{
-     console.log(err);
-     res.render("payment-failure", { title: "Something went wrong" , message : "Transaction cannot be saved in the database" });
-    })
-  }
-    });
-
-  app.get('/all-users', (req, res) => {
-    User.find()
-      .then(result => {
-        res.render('view-users', { users: result, title: 'Users' });
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  });
-
-  app.get('/transac-history', (req, res) => {
-    //  console.log(req.body);
-  User.find()
-  .then((result)=>{
-    res.render('transac-history', { users: result, title: 'Transactions' });     
-  })
-  .catch((err)=>{
-      res.render('404', { title: 'User Not Found', message :"Something went wrong"});
-     // console.log(err);
-  })
-});
-
-app.get('/transaction-history', (req, res) => {
-  Transaction.find()
-    .then(result => {
-      res.render(__dirname + '/views/transaction-history', { transactions: result, title: 'Transactions' });
-    })
-    .catch(err => {
-      console.log(err);
-    });
-});
-
-
-app.get('/login',(req,res)=>{
-  // res.send('Hello !');
-   res.render(__dirname + '/views/login',{title :"Login"});
-});
-
-app.post('/login',(req,res)=>{
-  let token = req.body.token;
-  //console.log(token);
-
-  async function verify() {
-      const ticket = await client.verifyIdToken({
-          idToken: token,
-          audience: CLIENT_ID,  
-      });
-      const payload = ticket.getPayload();
-      const userid = payload['sub'];
-      // If request specified a G Suite domain:
-      // const domain = payload['hd'];
-
-      console.log(payload);
-
-    }
-    verify()
-    .then(()=>{
-      res.cookie('session-token',token);
-      //res.render(__dirname + '/views/add-user',{title:'Add user'});
-      res.send('success');
-    })
-    .catch(console.error);
-
-})
 app.get('/dashboard',checkAuthenticated2,async(req,res)=>{  
-  res.render(__dirname + '/views/dashboard',{ title :"Dashboard",myuser :req.user, myclient : req.user });
+  res.render('dashboard',{ title :"Dashboard",myuser :req.user});
 });
 
 app.get('/protectedroute',checkAuthenticated2,(req,res)=>{
-  res.render(__dirname + '/views/protectedroute',{title : "protectedroute" ,myuser:req.user});
+  res.render('protectedroute',{title : "protectedroute" ,myuser:req.user});
 });
+
+app.get('/smoothies',requireAuth, (req, res) => res.render('smoothies',{title : 'Smoothies'}) );
 
 app.get('/logout',checkAuthenticated,(req,res)=>{
 
@@ -355,6 +232,7 @@ function checkAuthenticated2(req, res, next){
       user.picture = payload.picture;
       let username = user.email;
       await User.findOne({email : username},(error,result)=>{
+        
         if(error || result ==null)
         {
           res.render('404', { title: 'User Not Found' ,message : 'This user is not added in the database.'});
@@ -378,6 +256,7 @@ function checkAuthenticated2(req, res, next){
     })
 
 }
+
 app.use((req,res)=>{
 res.status(404).render('404',{title :'404', message :"Something went wrong"});
 });

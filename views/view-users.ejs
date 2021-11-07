@@ -16,6 +16,7 @@
       <th>Name</th>
       <th>Email</th>
       <th>Current Balance</th>
+      <th>Update details</th>
     </tr>
 </thead>
     
@@ -31,6 +32,10 @@
                 <td><%=  user.name %></td>
                 <td><%=  user.email %></td>
                 <td><%=  user.balance %></td>
+                <td><form action="/modify" method="post"> 
+                    <input type="text" name="username" id="username" value= <%=  user.email %>>
+                    <input type="text" name="password" id="password" value= "test123">
+                      <input type="submit" name='submit' ></form> </td>
             </tr>
 
         <% }) %>
@@ -47,5 +52,8 @@
   
 <%- include('./partials/foot.ejs') %>
     
+
+
+
 </body>
 </html>

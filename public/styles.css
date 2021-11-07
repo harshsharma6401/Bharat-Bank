@@ -174,7 +174,7 @@ padding: 6% 5%;
   color:white;
   /* //font-family: 'Abhaya Libre', serif; */
 }
-.create-user input[type=text], input[type=number] {
+.create-user input[type=text], input[type=number],input[type=password] {
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
@@ -238,6 +238,18 @@ margin: 10%;
   margin: 2% 0%;
 }
 
+.login-google{
+  margin: 5% 0%;
+  text-align: center;
+}
+.login-logo{
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 30%;
+
+}
+
 /* For Dashboard :.user-dashboard,.card-link,.card-img, .card-img-top */
 
 .user-dashboard{
@@ -281,8 +293,27 @@ margin: 10%;
     text-align: center;
     background-color: #1D2D50 ;
     color: #fff;
-    
   }
+  #password {  
+    background-image: url("https://img.icons8.com/material-sharp/20/000000/visible.png");
+    background-position: 97% center;
+    background-repeat: no-repeat;
+  }
+  #password.visible {
+    background-image: url("https://img.icons8.com/material-outlined/20/000000/invisible.png");
+  } 
+  #toggle-password {
+    display: none;
+  }
+  #toggle-password + label {
+    text-indent: -9999px;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-left: -32px;
+    cursor: pointer;
+  }
+
 
   @media screen and (max-width: 767px) {
     .logoimg{
@@ -367,6 +398,8 @@ margin: 10%;
     }
 
   }
+
+
   @media screen and (min-width: 768px) and (max-width: 991px){
     .navbar-nav .nav-link {
       text-align: center;
@@ -376,4 +409,5 @@ margin: 10%;
       border-bottom: 1px solid #fff;
      
   }
-  }
+}
+  
