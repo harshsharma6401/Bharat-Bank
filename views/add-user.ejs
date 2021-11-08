@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <%-include("./partials/head.ejs") %> 
 
@@ -35,40 +36,41 @@
     </div>
  
 
-    <script>
-        function checkSignIn() {  
-          var xhr = new XMLHttpRequest();
-          xhr.open("GET", "/checksignin");
-          xhr.setRequestHeader(
-            "Content-Type",
-            "application/json"
-          );
-            xhr.onload = function () {
-            console.log("Signed in as: " + xhr.responseText);
-            if(xhr.responseText == 'No token')
-            {
-                
-                swal({
-                title: "Login",
-                text: "You are not logged in! \n Kindly login to Add User",
-                icon: "warning",
-                button: "OK",
-                closeOnClickOutside: false,
-                });
-            }
-            else
-            {
-                //User is logged in
-            }
-          };
-          xhr.send('No');
-          
-        }
-        checkSignIn();
-
-
-      </script>
   
+    <script>
+      let loggedout = false;
+      let user1 = '<%- JSON.stringify(user)%>';  
+      let user2 = '<%- JSON.stringify(Googleuser) %>';  
+    
+      if(user1 === 'null' && user2 === 'null' )
+      loggedout = true;
+    
+      console.log('Logged out : ',loggedout);
+      console.log('user1 and user 2 : ',user1,user2);
+    
+      if(loggedout == true)
+      {
+        swal({
+              title: "Login",
+              text:  "You are not logged in! ",
+              icon: "error",
+              button: "OK",
+              closeOnClickOutside: false,
+              });
+      }
+      else{
+        // swal({
+        //        title: "Login",
+        //        text: "You are logged in!",
+        //        icon: "success",
+        //       button: "OK",
+        //        closeOnClickOutside: false,
+        //      });
+      }
+    
+      </script>
+    
+
 <%- include('./partials/foot.ejs') %>
     
 </body>

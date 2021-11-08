@@ -50,3 +50,169 @@
       });
     </script>
     
+    function checkAuthenticated2(req, res, next){
+
+  let token = req.cookies['session-token'];
+
+  let user = {};
+  async function verify() {
+      const ticket = await client.verifyIdToken({
+          idToken: token,
+          audience: CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
+      });
+      const payload = ticket.getPayload();
+      user.name = payload.name;
+      user.email = payload.email;
+      user.picture = payload.picture;
+      let username = user.email;
+      await User.findOne({email : username},(error,result)=>{
+        
+        if(error || result ==null)
+        {
+          res.render('404', { title: 'User Not Found' ,message : 'This user is not added in the database.'});
+        }
+        else
+        { 
+          console.log(result);
+          user.accountNumber  = result.accountNumber;
+          user.balance = result.balance;
+        }
+        });
+        
+    }
+    verify()
+    .then(()=>{
+        req.user = user;
+        next();
+    })
+    .catch(err=>{
+        res.redirect('/login');
+    })
+
+}
+function checkAuthenticated(req, res, next){
+
+  let token = req.cookies['session-token'];
+
+  let user = {};
+  async function verify() {
+      const ticket = await client.verifyIdToken({
+          idToken: token,
+          audience: CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
+      });
+      const payload = ticket.getPayload();
+      user.name = payload.name;
+      user.email = payload.email;
+      user.picture = payload.picture;
+    }
+    verify()
+    .then(()=>{
+        req.user = user;
+        next();
+    })
+    .catch(err=>{
+        res.redirect('/login')
+    })
+
+}
+
+<!-- <script>
+
+  //This is the method to checksign in of Transfer money tab
+
+  let loggedout = false;
+  let user = '<%- JSON.stringify(user) %>';  
+
+  if(user === 'null')
+  loggedout = true;
+
+  console.log('Logged out : ',loggedout);
+  console.log('user : ',user);
+
+
+  function checkSignIn() {  
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/checksignin");
+    xhr.setRequestHeader(
+      "Content-Type",
+      "application/json"
+    );
+      xhr.onload = function () {
+      console.log("Signed in as: " + xhr.responseText);
+      if((xhr.responseText == 'No token') && (loggedout === true))
+      {
+          
+          swal({
+          title: "Login",
+          text:  "You are not logged in! ",
+          icon: "error",
+          button: "OK",
+          closeOnClickOutside: false,
+          });
+      }
+      else
+      {
+         swal({
+           title: "Login",
+           text: "You are logged in!",
+           icon: "success",
+          button: "OK",
+           closeOnClickOutside: false,
+         });
+      
+      }
+    };
+    xhr.send('No');
+    
+  }
+  checkSignIn();
+</script> -->
+
+
+
+    <script>
+
+      //Check sign in of add-user
+      let loggedout = false;
+      let user = '<%- JSON.stringify(user) %>';  
+
+      if(user === 'null')
+      loggedout = true;
+
+      console.log('Logged out : ',loggedout);
+      console.log('user : ',user);
+
+
+
+        function checkSignIn() {  
+          var xhr = new XMLHttpRequest();
+          xhr.open("GET", "/checksignin");
+          xhr.setRequestHeader(
+            "Content-Type",
+            "application/json"
+          );
+            xhr.onload = function () {
+            console.log("Signed in as: " + xhr.responseText);
+            if((xhr.responseText == 'No token') && (loggedout === true))
+            {
+                
+                swal({
+                title: "Login",
+                text: "You are not logged in! \n Kindly login to Add User",
+                icon: "warning",
+                button: "OK",
+                closeOnClickOutside: false,
+                });
+            }
+            else
+            {
+                //User is logged in
+            }
+          };
+          xhr.send('No');
+          
+        }
+        checkSignIn();
+
+
+      </script>

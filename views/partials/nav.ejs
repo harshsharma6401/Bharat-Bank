@@ -17,19 +17,50 @@
           <a class="nav-link" href="../transaction-history">Transactions</a>
           <!-- <a class="nav-link" href="../login">Login </a> -->
           <div class="dropdown  ">
-            <button class="btn dropdown-toggle drop-btn nav-link " type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-              Profile &NonBreakingSpace;<i class="fa fa-user" aria-hidden="true"></i>
+            <button class="btn dropdown-toggle drop-btn nav-link " id ='profile' type="button" id="dropdownMenuButton1"  data-bs-toggle="dropdown" aria-expanded="false">
+              <%if(user) {%> 
+               <%=user.name%>
+              <% }else { %>
+                <%if(Googleuser) {%> 
+                  <%=Googleuser.name%>
+                 <% }else { %>
+                  Profile
+                  <% }%>
+               <% }%>
+               &NonBreakingSpace; <i class="fa fa-user" aria-hidden="true"></i>
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-              <li><a class="dropdown-item" href="/dashboard">Dashboard</a></li>
-              <li><a class="dropdown-item" href="/login">Login</a></li>
-              <li><a class="dropdown-item" href="/logout">Logout</a></li>
+              <li><a class="dropdown-item" href="/dashboard" id='dashboard-drop'>Dashboard</a></li>
+              <li><a class="dropdown-item" href="/login" id='login-drop' >Login</a></li>
+                <li><a class="dropdown-item" id='logout' href="/logout">Logout</a></li>
             </ul>
           </div>
         </div>
       </div>
     </div>
   </nav> 
+
+  <script>
+    let Loggedout = false;
+    let User1 = '<%- JSON.stringify(user)%>';  
+    let User2 = '<%- JSON.stringify(Googleuser) %>';  
+    
+    console.log('User1 , User2' ,User1 , User2);
+
+    if(User1 === 'null' && User2 === 'null' )
+    Loggedout = true;
+
+    if(Loggedout == true)
+    {
+      document.getElementById('logout').style.display = 'none';
+      document.getElementById('dashboard-drop').style.display = 'none';
+    }
+    if(Loggedout == false)
+    {
+      document.getElementById('login-drop').style.display = 'none';
+    }
+
+    </script>
 
   <script>
     function onSignIn(googleUser) {
@@ -58,6 +89,7 @@
     function signOut() {
       var auth2 = gapi.auth2.getAuthInstance();
       auth2.signOut().then(function () {
+
         localStorage.removeItem('token');
         console.log("User signed out.");
        
@@ -105,7 +137,7 @@
       }
       return false;
     }    
-
-
+   
 
 </script>
+

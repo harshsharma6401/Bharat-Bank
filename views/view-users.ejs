@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <%-include("./partials/head.ejs") %>
 <body>
@@ -51,8 +52,18 @@
 </div>
   
 <%- include('./partials/foot.ejs') %>
-    
 
+<script>
+  let loggedout = false;
+  let user1 = '<%- JSON.stringify(user)%>';  
+  let user2 = '<%- JSON.stringify(Googleuser) %>';  
+
+  if(user1 === 'null' && user2 === 'null' )
+  loggedout = true;
+  
+  console.log('Logged out : ',loggedout);
+  console.log('user1 and user 2 : ',user1,user2);
+  </script>
 
 
 </body>

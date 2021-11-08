@@ -183,3 +183,196 @@ app.post('/login',(req,res)=>{
     .catch(console.error);
 
 });
+
+function checkAuthenticated2(req, res, next){
+
+  let token = req.cookies['session-token'];
+
+  let user = {};
+  async function verify() {
+      const ticket = await client.verifyIdToken({
+          idToken: token,
+          audience: CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
+      });
+      const payload = ticket.getPayload();
+      user.name = payload.name;
+      user.email = payload.email;
+      user.picture = payload.picture;
+      let username = user.email;
+      await User.findOne({email : username},(error,result)=>{
+        
+        if(error || result ==null)
+        {
+          res.render('404', { title: 'User Not Found' ,message : 'This user is not added in the database.'});
+        }
+        else
+        { 
+          console.log(result);
+          user.accountNumber  = result.accountNumber;
+          user.balance = result.balance;
+        }
+        });
+        
+    }
+    verify()
+    .then(()=>{
+        req.user = user;
+        next();
+    })
+    .catch(err=>{
+        res.redirect('/login');
+    })
+
+}
+function checkAuthenticated(req, res, next){
+
+  let token = req.cookies['session-token'];
+
+  let user = {};
+  async function verify() {
+      const ticket = await client.verifyIdToken({
+          idToken: token,
+          audience: CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
+      });
+      const payload = ticket.getPayload();
+      user.name = payload.name;
+      user.email = payload.email;
+      user.picture = payload.picture;
+    }
+    verify()
+    .then(()=>{
+        req.user = user;
+        next();
+    })
+    .catch(err=>{
+        res.redirect('/login')
+    })
+
+}
+
+app.post('/login',(req,res)=>{
+    let token = req.body.token;
+    //console.log(token);
+  
+    async function verify() {
+        const ticket = await client.verifyIdToken({
+            idToken: token,
+            audience: CLIENT_ID,  
+        });
+        const payload = ticket.getPayload();
+        const userid = payload['sub'];
+        // If request specified a G Suite domain:
+        // const domain = payload['hd'];
+  
+        console.log(payload);
+  
+      }
+      verify()
+      .then(()=>{
+        res.cookie('session-token',token,{SameSite : 'None' , Secure :true});
+        //res.render(__dirname + '/views/add-user',{title:'Add user'});
+        res.send('success');
+      })
+      .catch(console.error);
+  
+  });
+
+  app.get('/dashboard',checkAuthenticated3,async(req,res)=>{  
+  
+  if(res.locals.user)
+  {
+  console.log('Res.locals.user : ',res.locals.user);
+  req.user = res.locals.user;
+  }
+  res.render('dashboard',{ title :"Dashboard",myuser :req.user});
+});
+
+app.get('/logout',checkAuthenticated,(req,res)=>{
+
+  let myuser = req.user;
+  console.log(myuser);
+  async function asyncCall() {
+      async function deleteCookie()
+      { 
+       // While deploying set domain to be heroku
+      // let dom = window.location.hostname;
+       //console.log(dom);
+       //res.cookie('JWT','',{maxAge : 1});
+         res.cookie('session-token','',{maxAge : 1, SameSite : 'None' , Secure :true});
+       // res.clearCookie('session-token',{path:'/',domain:'localhost'});
+        //res.clearCookie('session-token',{path:'/',domain:`${dom}`});
+       // res.clearCookie('session-token');
+        res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+      }
+      await deleteCookie();
+
+    }
+    asyncCall();
+    
+    res.redirect('/');
+});
+
+app.post('/modify', async (req, res) => {
+  console.log(req.body);
+
+  const plainTextPassword = req.body.password;
+  const username = req.body.username;
+
+  const salt = await bcrypt.genSalt();
+  const set_password  = await bcrypt.hash(plainTextPassword,salt);
+  //const set_password = await bcrypt.hash(plainTextPassword,10);
+
+  console.log(set_password);
+
+      const response = await User.updateOne (
+          {
+             email :  username
+          },
+          {
+              $set: {
+                 password: set_password
+              }
+          }
+      )
+  
+      console.log(response);
+  
+      res.json({ status: 'ok' })
+  });
+
+
+  app.get('/checksignin',(req,res)=>{
+
+  //let my user =  req.user;
+  let token = req.cookies['session-token'];
+  if(!token)
+  {
+    console.log("No token ");
+    res.send('No token');
+  }
+  else
+  {
+  //console.log(token);
+  
+  let user = {};
+  async function verify() {
+      const ticket = await client.verifyIdToken({
+          idToken: token,
+          audience: CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
+      });
+      const payload = ticket.getPayload();
+      user.name = payload.name;
+      user.email = payload.email;
+      user.picture = payload.picture;
+    }
+    verify()
+    .then(()=>{
+        req.user = user;
+        console.log(req.user);
+        res.send(user.email);
+    })
+    .catch(err=>{
+      res.send('No token');
+    })
+  }
+});

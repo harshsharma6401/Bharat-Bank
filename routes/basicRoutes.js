@@ -1,11 +1,14 @@
 const {Router} = require('express');
 const router = Router();
 const basicController = require('../controllers/basicController');
+const {requireAuth,checkUser,checkAuthenticated3,checkAuthenticated2,checkAuthenticated,checkLogin} = require('../middlewares/authMiddleware');
 
+ router.get('*',checkUser);
+ router.get('*',checkLogin);
 
-router.get('/transfer-money',basicController.transferMoney_get);
+ router.get('/transfer-money',basicController.transferMoney_get);
 
-//router.post('/transfer',basicController.transfer_post);
+ router.post('/transfer',checkAuthenticated2,basicController.transfer_post);
 
  router.get('/add-user',basicController.addUser_get);
 
@@ -19,11 +22,7 @@ router.get('/transfer-money',basicController.transferMoney_get);
 
  router.get('/transaction-history',basicController.transactionHistory_get);
 
- router.get('/login',basicController.login_get);
+ router.post('/modify',basicController.modify_post);
 
- //router.post('/login',basicController.login_post);
   
-
-
-
 module.exports = router;

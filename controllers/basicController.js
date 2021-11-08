@@ -1,11 +1,14 @@
 const dotenv =  require('dotenv');
 dotenv.config({path:'./config.env'});
 
+const bcrypt = require('bcryptjs');
 const User = require('../models/users');
 const Transaction = require('../models/transactions');
 const { v4: uuidv4 } = require('uuid');
 const jwt = require('jsonwebtoken');
 const JWT_SECRET = process.env.JWT_SECRET;
+
+//const {requireAuth,checkUser} = require('../middlewares/authMiddleware');
 
 module.exports.transferMoney_get = (req,res) =>{
     res.render('transfer-money',{title:'Transfer'});
@@ -17,6 +20,10 @@ module.exports.transferMoney_get = (req,res) =>{
     res.redirect('all-users');
  }
  module.exports.allUsers_get = (req,res) =>{
+
+    console.log('Res.locals : ',res.locals);
+    console.log('Res.locals.Googleuser : ',res.locals.Googleuser);
+
     User.find()
     .then(result => {
       res.render('view-users', { users: result, title: 'Users' });
@@ -45,9 +52,7 @@ module.exports.transferMoney_get = (req,res) =>{
        // console.log(err);
     })
  }
- module.exports.login_get = (req,res) =>{
-    res.render('login2',{title :"Login"});
- }
+
 
  module.exports.viewUsers_post = async(req,res) =>{
 
@@ -74,9 +79,8 @@ module.exports.transferMoney_get = (req,res) =>{
       
     })
 }
-module.exports.transfer_post = async(req,res) =>{
+module.exports.transfer_post = async(req,res,) =>{
     const { sender, reciever, amount } = req.body;
-    
     console.log(req.body);
     const sendid = sender;
 
@@ -144,31 +148,32 @@ module.exports.transfer_post = async(req,res) =>{
     })
   }
  }
+ 
+ module.exports.modify_post = async(req,res) =>{
 
- module.exports.login_post = async(req,res) =>{
-    let token = req.body.token;
-    //console.log(token);
-  
-    async function verify() {
-        const ticket = await client.verifyIdToken({
-            idToken: token,
-            audience: CLIENT_ID,  
-        });
-        const payload = ticket.getPayload();
-        const userid = payload['sub'];
-        // If request specified a G Suite domain:
-        // const domain = payload['hd'];
-  
-        console.log(payload);
-  
-      }
-      verify()
-      .then(()=>{
-        res.cookie('session-token',token);
-        //res.render(__dirname + '/views/add-user',{title:'Add user'});
-        res.send('success');
-      })
-      .catch(console.error);
+  console.log(req.body);
 
+  const plainTextPassword = req.body.password;
+  const username = req.body.username;
+
+  const salt = await bcrypt.genSalt();
+  const set_password  = await bcrypt.hash(plainTextPassword,salt);
+  //const set_password = await bcrypt.hash(plainTextPassword,10);
+
+  console.log(set_password);
+
+      const response = await User.updateOne (
+          {
+             email :  username
+          },
+          {
+              $set: {
+                 password: set_password
+              }
+          }
+      )
+
+      console.log(response);
+  
+      res.json({ status: 'ok' })
 }
-

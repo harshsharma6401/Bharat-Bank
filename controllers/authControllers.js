@@ -1,11 +1,14 @@
 const dotenv =  require('dotenv');
-dotenv.config({path:'./config.env'});
-
-
 const User = require('../models/users');
 const jwt = require('jsonwebtoken');
+
+dotenv.config({path:'./config.env'});
+
+const {OAuth2Client} = require('google-auth-library');
+const CLIENT_ID = process.env.CLIENT_ID;
+const client = new OAuth2Client(CLIENT_ID);
+
 const JWT_SECRET = process.env.JWT_SECRET;
-//const JWT_SECRET = 'kccJUYHFV87fb6768O^(043jbrj(&5t&597%98%34bt242erjfbs424dihGFYUFK6ikRRKylfv6fULsdi5464&^$*sbdvs';
 
 const handleErrors = (err) =>{
     console.log(err.message,err.code);
@@ -120,3 +123,120 @@ module.exports.logout2_get = (req,res) =>{
     res.redirect('/');
 
 }
+module.exports.login_get = (req,res) =>{
+   
+    res.render('login2',{title :"Login"});
+  }
+
+  module.exports.logout_get = (req,res) =>{
+
+    let myuser = req.user;
+    if(myuser)
+    {
+    console.log(myuser);
+    async function asyncCall() {
+        async function deleteCookie()
+        { 
+         // While deploying set domain to be heroku
+        // let dom = window.location.hostname;
+         //console.log(dom);
+         //res.cookie('JWT','',{maxAge : 1});
+           res.cookie('session-token','',{maxAge : 1, SameSite : 'None' , Secure :true});
+         // res.clearCookie('session-token',{path:'/',domain:'localhost'});
+          //res.clearCookie('session-token',{path:'/',domain:`${dom}`});
+         // res.clearCookie('session-token');
+          res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+        }
+        await deleteCookie();
+  
+      }
+      asyncCall();
+      
+      res.redirect('/');
+    }
+    else
+    {
+        res.cookie('JWT','',{maxAge : 1}); // Replacing the cookie for a empty string  and setting expiry a milisecond
+        //Hence deleting it 
+       // res.clearCookie('JWT');
+    
+        res.redirect('/');
+    
+    }
+
+}
+   module.exports.login_post = async(req,res) =>{
+      let token = req.body.token;
+      //console.log(token);
+    
+      async function verify() {
+          const ticket = await client.verifyIdToken({
+              idToken: token,
+              audience: CLIENT_ID,  
+          });
+          const payload = ticket.getPayload();
+          const userid = payload['sub'];
+          // If request specified a G Suite domain:
+          // const domain = payload['hd'];
+    
+          console.log(payload);
+    
+        }
+        verify()
+        .then(()=>{
+          res.cookie('session-token',token,{SameSite : 'None' , Secure :true});
+          //res.render(__dirname + '/views/add-user',{title:'Add user'});
+          res.send('success');
+        })
+        .catch(console.error);
+  
+  }
+  
+module.exports.dashboard_get = async(req,res) =>{
+    
+  if(res.locals.user)
+  {
+  console.log('Res.locals.user : ',res.locals.user);
+  req.user = res.locals.user;
+  }
+  const trial = await req.user; //This is used for waiting to checkauthenticated3 to fetch data for req.user
+
+  res.render('dashboard',{ title :"Dashboard",myuser :req.user});
+
+}
+module.exports.checksignin_get = async(req,res) =>{
+    
+ //let my user =  req.user;
+ let token = req.cookies['session-token'];
+ if(!token)
+ {
+   console.log("No token ");
+   res.send('No token');
+ }
+ else
+ {
+ //console.log(token);
+ 
+ let user = {};
+ async function verify() {
+     const ticket = await client.verifyIdToken({
+         idToken: token,
+         audience: CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
+     });
+     const payload = ticket.getPayload();
+     user.name = payload.name;
+     user.email = payload.email;
+     user.picture = payload.picture;
+   }
+   verify()
+   .then(()=>{
+       req.user = user;
+       console.log(req.user);
+       res.send(user.email);
+   })
+   .catch(err=>{
+     res.send('No token');
+   })
+ }
+   
+   }
