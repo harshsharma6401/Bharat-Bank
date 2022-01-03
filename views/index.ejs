@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <%-include("./partials/head.ejs") %>
+
   <body>
     <%- include('./partials/nav.ejs') %>
     <div class="row content-start">
@@ -32,47 +33,6 @@
         <img class="header-img" src="/images/multiple img.jpg" />
       </div>
     </div>
-
-
-  
-    <!-- <a href="/checksignin" class="card-link btn btn-success"> Check here </a> -->
-    <!-- <a class="card-link btn btn-success" onclick="checkSignIn()"> Check here </a> -->
-
-    <!-- <script>
-      function checkSignIn() {  
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", "/checksignin");
-        xhr.setRequestHeader(
-          "Content-Type",
-          "application/json"
-        );
-          xhr.onload = function () {
-          console.log("Signed in as: " + xhr.responseText);
-          if(xhr.responseText == 'No token')
-          {
-              swal({
-              title: "Login",
-              text: "You are not logged in!",
-              icon: "error",
-              button: "OK",
-              closeOnClickOutside: false,
-            });
-          }
-          else
-          {
-            swal({
-              title: "Login",
-              text: "You are logged in!",
-              icon: "success",
-              button: "OK",
-              closeOnClickOutside: false,
-            });
-          }
-        };
-        xhr.send('No');
-        
-      }
-    </script> -->
 
 
     <%- include('./partials/foot.ejs') %>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <%-include("./partials/head.ejs") %>
-  <body>
+  <body class="dashboard-pg">
     <%- include('./partials/nav.ejs') %>
 
     <script>
@@ -13,7 +13,8 @@
         console.log("Logged out : ", loggedout);
         console.log("user : ", myuser);
       }
-    </script>
+    </script>  
+
 
     <div class="card user-dashboard" style="width: 18rem">
     
@@ -37,7 +38,6 @@
         <% } %>
         <br />
         <h5 class="card-title"><strong><%= myuser.name %> </strong></h5>
-        <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
       </div>
       <ul class="list-group list-group-flush">
         <li class="list-group-item">
@@ -48,7 +48,7 @@
           <%= myuser.balance %>
         </li>
         <li class="list-group-item">
-          <strong>Account email </strong> <br /><%= myuser.email %>
+          <strong>Account Email </strong> <br /><%= myuser.email %>
         </li>
       </ul>
       <div class="card-body">
@@ -60,7 +60,6 @@
 
         <% } %>
 
-        <!--   <a href="/logout" class="card-link btn btn-success"  >Sign Out</a>   onclick="signOut()" -->
       </div>
     </div>
 

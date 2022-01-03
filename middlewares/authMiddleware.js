@@ -128,7 +128,8 @@ const checkAuthenticated3 = (req, res, next)=>{
           
           if(error || result ==null)
           {
-            res.render('404', { title: 'User Not Found' ,message : 'This user is not added in the database.'});
+              //throw Error('This user is not registered');
+            res.render('404', { title: 'User Not Found' ,message : 'This user is not registered.'});
           }
           else
           { 

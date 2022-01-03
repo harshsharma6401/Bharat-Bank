@@ -11,7 +11,7 @@ const jwt = require('jsonwebtoken');
 const User = require('./models/users');
 const basicRoutes = require('./routes/basicRoutes');
 const authRoutes = require('./routes/authRoutes');
-const {requireAuth,checkUser,checkAuthenticated2,checkAuthenticated,checkAuthenticated3,checkLogin} = require('./middlewares/authMiddleware');
+const {checkUser,checkAuthenticated3,checkLogin} = require('./middlewares/authMiddleware');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -34,8 +34,8 @@ app.use(express.static('public'));
 app.use(express.urlencoded({extended:false}));
 app.use(express.json());
 app.use(cookieParser());
-//everytime you use the browser back button, the page is reloaded and not cached. (Restricted  to go to protected routes after logout )
 
+//everytime you use the browser back button, the page is reloaded and not cached. (Restricted  to go to protected routes after logout )
 app.use(function(req, res, next) {
     res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
      next();

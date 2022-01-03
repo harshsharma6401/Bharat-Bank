@@ -1,77 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
-<%-include("./partials/head.ejs") %> 
+  <%-include("./partials/head.ejs") %>
 
-<body>
-  
+  <body class ="form-bg">
     <%- include('./partials/nav.ejs') %>
- 
 
-    <div class="create-user">
-        <div class="add-head">
-            <h1>REGISTER ACCOUNT</h1>
+    <head>
+        <link rel="stylesheet" href="/forms.css">
+      </head>
+
+    <div class="login-form-outer">
+      <form
+        action="/view-users"
+        method="POST"
+        class="form"
+        onsubmit="return checkBeforeSubmit()"
+      >
+        <div class="title">SignUp</div>
+        <div class="subtitle">Let's SignUp for an Account!</div>
+        <div class="input-container ic2">
+          <input
+            id="accountNumber"
+            class="input"
+            type="text"
+            placeholder=" "
+            name="accountNumber"
+            required
+          />
+          <div class="cut cut-medium"></div>
+          <label for="accountNumber" class="placeholder">Account Number</label>
         </div>
-        <form action="/view-users" method ="POST" onsubmit="return checkBeforeSubmit()">
-            
-            <label for="accountNumber">Account number : </label>
-            <input type="number" id="accountNumber" placeholder ="98xxxx (Will be auto generated)" name ="accountNumber" required>
+        <div class="input-container ic2">
+          <input
+            id="name"
+            class="input"
+            type="text"
+            placeholder=" "
+            name="name"
+            required
+          />
+          <div class="cut"></div>
+          <label for="name" class="placeholder">Full Name</label>
+        </div>
 
-            <label for="name" >Name:</label>
-            <input type="text" id="name" placeholder ="John doe" name ="name" required>
+        <div class="input-container ic2">
+          <input
+            id="balance"
+            class="input"
+            type="text"
+            placeholder=" "
+            name="balance"
+            required
+          />
+          <div class="cut"></div>
+          <label for="balance" class="placeholder"> Balance </label>
+        </div>
 
-            <label for="email" >Email:</label>
-            <input type="text" id="email" placeholder ="John@email.com" name ="email" required>
+        <div class="input-container ic2">
+          <input
+            type="text"
+            id="email"
+            class="input"
+            placeholder=" "
+            name="email"
+            required
+          />
+          <div class="cut"></div>
+          <label for="email" class="placeholder">Email</label>
+        </div>
 
-            <label for=" balance">Current balance : </label>
-            <input type="number" id="balance"  placeholder ="1000" name ="balance" required>
+        <div class="email error"></div>
 
-            <div>
-           <label for="password"> Password : </label>
-           <input type="password" id="password" placeholder="Enter password" name ="password" required>
-            <input type="checkbox" id="toggle-password" />
-            <label for="toggle-password">Show Password</label>
-          </div>
-             <input type="submit" name='submit' data-onsuccess="onSignIn"> <!-- <button>Submit</button>  -->
-        </form>
+        <div class="input-container ic2">
+          <input
+            type="text"
+            id="password"
+            class="input"
+            placeholder=" "
+            name="password"
+            required
+          />
+          <div class="cut"></div>
+          <label for="password" class="placeholder">Password</label>
+        </div>
+
+        <div class="password error"></div>
+
+        <button type="text" class="submit">Submit</button>
+      </form>
     </div>
- 
 
-  
-    <script>
-      let loggedout = false;
-      let user1 = '<%- JSON.stringify(user)%>';  
-      let user2 = '<%- JSON.stringify(Googleuser) %>';  
-    
-      if(user1 === 'null' && user2 === 'null' )
-      loggedout = true;
-    
-      console.log('Logged out : ',loggedout);
-      console.log('user1 and user 2 : ',user1,user2);
-    
-      if(loggedout == true)
-      {
-        swal({
-              title: "Login",
-              text:  "You are not logged in! ",
-              icon: "error",
-              button: "OK",
-              closeOnClickOutside: false,
-              });
-      }
-      else{
-        // swal({
-        //        title: "Login",
-        //        text: "You are logged in!",
-        //        icon: "success",
-        //       button: "OK",
-        //        closeOnClickOutside: false,
-        //      });
-      }
-    
-      </script>
-    
-
-<%- include('./partials/foot.ejs') %>
-    
-</body>
+    <%- include('./partials/foot.ejs') %>
+  </body>
 </html>

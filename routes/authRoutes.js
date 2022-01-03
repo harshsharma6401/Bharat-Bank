@@ -1,9 +1,13 @@
 const {Router} = require('express');
 const router = Router();
 const authController = require('../controllers/authControllers');
-const {requireAuth,checkUser,checkAuthenticated2,checkAuthenticated,checkAuthenticated3,checkLogin} = require('../middlewares/authMiddleware');
+const {checkAuthenticated3} = require('../middlewares/authMiddleware');
+
+router.get('/loginother',authController.loginother_get);
 
 router.get('/signup',authController.signup_get);
+
+router.get('/sign-up',authController.signUp_get); //This is same  as add user 
 
 router.post('/signup',authController.signup_post);
 

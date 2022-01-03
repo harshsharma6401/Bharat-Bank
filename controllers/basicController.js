@@ -8,7 +8,7 @@ const { v4: uuidv4 } = require('uuid');
 const jwt = require('jsonwebtoken');
 const JWT_SECRET = process.env.JWT_SECRET;
 
-//const {requireAuth,checkUser} = require('../middlewares/authMiddleware');
+
 
 module.exports.transferMoney_get = (req,res) =>{
     res.render('transfer-money',{title:'Transfer'});
@@ -84,6 +84,22 @@ module.exports.transfer_post = async(req,res,) =>{
     console.log(req.body);
     const sendid = sender;
 
+    console.log('Res.locals : ',res.locals);
+
+    let given_email;
+
+    if(res.locals.user !== null)
+    {
+      given_email = res.locals.user.email;
+    }
+    else if(res.locals.Googleuser !== null)
+    {
+       given_email = res.locals.Googleuser.email;
+    }
+    else{
+      throw Error('User Email not Found');
+    }
+
     let senderUser, transferUser;
     try {
       senderUser = await User.findOne({ accountNumber: sender });
@@ -91,6 +107,7 @@ module.exports.transfer_post = async(req,res,) =>{
 
     }
     catch (err) {
+      console.log('User not found : ',err);
       res.render("payment-failure", { title: "Something went wrong" , message : "Something went wrong" });
     }
 
@@ -103,9 +120,9 @@ module.exports.transfer_post = async(req,res,) =>{
       res.render("payment-failure", { title: "Not Enough", message : "Amount entered is more than balance."  });
     }
 
-    else if(req.user.email != senderUser.email){
+    else if(given_email != senderUser.email){
 
-    console.log("Invalid ",senderUser.email,req.user.email);
+    console.log("Invalid ",senderUser.email,given_email);
     res.render("payment-failure", { title: "Not logged in" , message : "Please login with your registered email address."});
 
     }
@@ -140,7 +157,7 @@ module.exports.transfer_post = async(req,res,) =>{
      
      await transaction.save()
     .then((result)=>{
-    res.render("payment-success", { title: "Transaction successful" ,message: `Your balance is ${currency} ${savedsenderUser.balance}.`});
+    res.render("payment-success", { title: "Transaction successful" ,message: `Your balance is  ${currency} ${savedsenderUser.balance}.`});
     })
     .catch((err)=>{
      console.log(err);

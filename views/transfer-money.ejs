@@ -1,27 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <%-include("./partials/head.ejs") %>
-<body>
+<head>
+  <link rel="stylesheet" href="/forms.css">
+</head>
+<body class ="form-bg">
   
     <%- include('./partials/nav.ejs') %>
  
-</div>
-<div class="create-user">
-<form action="/transfer" method ="POST" onsubmit="return checkBeforeSubmit()">
-    
-    <label for="accountNumber"> Account number  of Sender: </label>
-    <input type="number" id="accountNumber" placeholder="98xxxx" name ="sender" required>
 
+<div class="login-form-outer">
+      
+  <form action="/transfer" method ="POST" class = "form" onsubmit="return checkBeforeSubmit()">
+    <div class="title">Transfer Money</div>
+    <div class="subtitle"> It'll feel like blink of an eye</div>
+    <div class="input-container ic2">  
+    <input id="accountNumber" class="input" type="text" placeholder=" " name ="sender" required/>
+      <div class="cut cut-long"></div>
+      <label for="accountNumber" class="placeholder">Account number  of Sender</label>
+    </div>
+
+    <div class="input-container ic2">  
+      <input id="accountNumber" class="input" type="text" placeholder=" " name ="reciever" required/>
+        <div class="cut cut-long"></div>
+        <label for="accountNumber" class="placeholder">Account number  of Reciever</label>
+    </div>
      
-    <label for="accountNumber"> Account number of Reciever : </label>
-    <input type="number" id="accountNumber" placeholder="98xxxx" name ="reciever" required>
+    <div class="input-container ic2">
+      <input id="balance" class="input" type="text" placeholder=" " name ="amount" id ="balance" required />
+      <div class="cut"></div>
+      <label for="balance" class="placeholder"> Amount </label>
+    </div>
 
-
-    <label for=" amount">Amount : </label>
-    <input type="number" id="balance" placeholder="1000" name ="amount" required>
-    <input type="submit" name='submit' > <!-- <button>Submit</button> onfocus="checkSignIn()"  -->
-</form>
+      <button type="text" class="submit" name = "submit">Submit</button>
+  </form>
 </div>
+
+
+
 
 <script>
   let loggedout = false;

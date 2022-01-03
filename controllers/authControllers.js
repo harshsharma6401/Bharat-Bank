@@ -50,6 +50,7 @@ const handleErrors = (err) =>{
 }
 
 const max_Age = 3 * 24 * 60 * 60; //   This is 3 days in seconds
+const token_Age = 3 * 60 * 60; // This is 3 hr in seconds
 
 const createToken = (id)=> {
 return jwt.sign({id},JWT_SECRET,{
@@ -57,9 +58,15 @@ return jwt.sign({id},JWT_SECRET,{
 });
 }
 
-
+module.exports.loginother_get = (req,res) =>{
+    res.render('loginother',{title:'Other Login'});
+  }
+  
 module.exports.signup_get = (req,res) =>{
     res.render('signup');
+}
+module.exports.signUp_get = (req,res) =>{
+    res.redirect('/add-user');
 }
 module.exports.login2_get = (req,res) =>{
     res.render('login2',{title : 'Login2'});
@@ -98,7 +105,7 @@ module.exports.login2_post = async(req,res) =>{
         
         const token = createToken(user._id);
 
-        res.cookie('JWT',token,{ httponly : true, maxAge :max_Age * 1000 ,SameSite : 'None'}); //maxAge field taken input in miliseconds
+        res.cookie('JWT',token,{ httponly : true, maxAge :token_Age * 1000 ,SameSite : 'None'}); //maxAge field taken input in miliseconds
 
         console.log('Logged in : ',user);
         res.status(200).json({user : user._id});
@@ -184,7 +191,7 @@ module.exports.login_get = (req,res) =>{
         }
         verify()
         .then(()=>{
-          res.cookie('session-token',token,{SameSite : 'None' , Secure :true});
+          res.cookie('session-token',token,{SameSite : 'None' , Secure :true,maxAge: token_Age*1000});
           //res.render(__dirname + '/views/add-user',{title:'Add user'});
           res.send('success');
         })
@@ -197,12 +204,12 @@ module.exports.dashboard_get = async(req,res) =>{
   if(res.locals.user)
   {
   console.log('Res.locals.user : ',res.locals.user);
-  req.user = res.locals.user;
+  req.user = await res.locals.user;
   }
-  const trial = await req.user; //This is used for waiting to checkauthenticated3 to fetch data for req.user
+  //const trial = await req.user; //This is used for waiting to checkauthenticated3 to fetch data for req.user
 
-  res.render('dashboard',{ title :"Dashboard",myuser :req.user});
-
+  res.render('dashboard',{ title :"Dashboard", myuser :  req.user});
+ 
 }
 module.exports.checksignin_get = async(req,res) =>{
     

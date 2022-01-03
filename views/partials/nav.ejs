@@ -31,6 +31,7 @@
             </button>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
               <li><a class="dropdown-item" href="/dashboard" id='dashboard-drop'>Dashboard</a></li>
+              <li><a class="dropdown-item" href="/sign-up" id='signup-drop' >SignUp</a></li>
               <li><a class="dropdown-item" href="/login" id='login-drop' >Login</a></li>
                 <li><a class="dropdown-item" id='logout' href="/logout">Logout</a></li>
             </ul>
@@ -58,6 +59,7 @@
     if(Loggedout == false)
     {
       document.getElementById('login-drop').style.display = 'none';
+      document.getElementById('signup-drop').style.display = 'none';
     }
 
     </script>
