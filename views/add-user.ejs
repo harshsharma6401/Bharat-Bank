@@ -11,7 +11,7 @@
 
     <div class="login-form-outer">
       <form
-        action="/view-users"
+         action="/view-users"  
         method="POST"
         class="form"
         onsubmit="return checkBeforeSubmit()"
@@ -25,6 +25,7 @@
             type="text"
             placeholder=" "
             name="accountNumber"
+            autocomplete="off"
             required
           />
           <div class="cut cut-medium"></div>
@@ -37,6 +38,7 @@
             type="text"
             placeholder=" "
             name="name"
+            autocomplete="off"
             required
           />
           <div class="cut"></div>
@@ -50,6 +52,7 @@
             type="text"
             placeholder=" "
             name="balance"
+            autocomplete="off"
             required
           />
           <div class="cut"></div>
@@ -63,6 +66,7 @@
             class="input"
             placeholder=" "
             name="email"
+            autocomplete="off"
             required
           />
           <div class="cut"></div>
@@ -78,6 +82,7 @@
             class="input"
             placeholder=" "
             name="password"
+            autocomplete="off"
             required
           />
           <div class="cut"></div>
@@ -89,6 +94,8 @@
         <button type="text" class="submit">Submit</button>
       </form>
     </div>
+
+
 
     <%- include('./partials/foot.ejs') %>
   </body>

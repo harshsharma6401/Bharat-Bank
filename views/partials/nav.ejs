@@ -1,145 +1,167 @@
-
-  <nav class="navbar navbar-expand-lg "> <!--navbar-light bg-light -->
-    <div class="container-fluid in">
+<nav class="navbar navbar-expand-lg">
+  <!--navbar-light bg-light -->
+  <div class="container-fluid in">
+    <a class="navbar-brand" href="/dashboard">
       
-       <a class="navbar-brand" href="/dashboard">  <!--href="/dashboard" -->
+      <img class="logoimg" src="/images/prac2.png" alt="" />
+      Bharat Bank</a
+    >
+    <button
+      class="navbar-toggler custom-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNavAltMarkup"
+      aria-controls="navbarNavAltMarkup"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon">
+        <i class="fas fa-chevron-circle-down"></i>
+      </span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link" href="../index">Home</a>
+        <a class="nav-link" href="../all-users">View Users</a>
+        <a class="nav-link" href="../transfer-money">Transfer Money</a>
+        <a class="nav-link" href="../transaction-history">Transactions</a>
         
-          <img class ="logoimg" src="/images/prac2.png" alt="">
-            Bharat Bank</a>
-      <button class="navbar-toggler custom-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon">  <i class="fas fa-chevron-circle-down"></i> </span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
-          <a class="nav-link "href="../index">Home</a>
-          <a class="nav-link" href="../all-users">View Users</a>
-          <a class="nav-link" href="../transfer-money">Transfer Money</a>
-          <a class="nav-link" href="../transaction-history">Transactions</a>
-          <!-- <a class="nav-link" href="../login">Login </a> -->
-          <div class="dropdown  ">
-            <button class="btn dropdown-toggle drop-btn nav-link " id ='profile' type="button" id="dropdownMenuButton1"  data-bs-toggle="dropdown" aria-expanded="false">
-              <%if(user) {%> 
-               <%=user.name%>
+        <div class="dropdown">
+          <button
+            class="btn dropdown-toggle drop-btn nav-link"
+            id="profile"
+            type="button"
+            id="dropdownMenuButton1"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+          <%if(user) {%> 
+            <%=user.name%>
+           <% }else { %>
+             <%if(Googleuser) {%> 
+               <%=Googleuser.name%>
               <% }else { %>
-                <%if(Googleuser) {%> 
-                  <%=Googleuser.name%>
-                 <% }else { %>
-                  Profile
-                  <% }%>
+               Profile
                <% }%>
-               &NonBreakingSpace; <i class="fa fa-user" aria-hidden="true"></i>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-              <li><a class="dropdown-item" href="/dashboard" id='dashboard-drop'>Dashboard</a></li>
-              <li><a class="dropdown-item" href="/sign-up" id='signup-drop' >SignUp</a></li>
-              <li><a class="dropdown-item" href="/login" id='login-drop' >Login</a></li>
-                <li><a class="dropdown-item" id='logout' href="/logout">Logout</a></li>
-            </ul>
-          </div>
+            <% }%>
+            &NonBreakingSpace; <i class="fa fa-user" aria-hidden="true"></i>
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+            <li>
+              <a class="dropdown-item" href="/dashboard" id="dashboard-drop"
+                >Dashboard</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="/sign-up" id="signup-drop"
+                >SignUp</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" href="/login" id="login-drop">Login</a>
+            </li>
+            <li>
+              <a class="dropdown-item" id="logout" href="/logout">Logout</a>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
-  </nav> 
+  </div>
+</nav>
 
-  <script>
-    let Loggedout = false;
-    let User1 = '<%- JSON.stringify(user)%>';  
-    let User2 = '<%- JSON.stringify(Googleuser) %>';  
-    
-    console.log('User1 , User2' ,User1 , User2);
+<script>
+  let Loggedout = false;
+  let User1 = '<%- JSON.stringify(user)%>';  
+  let User2 = '<%- JSON.stringify(Googleuser) %>';  
+  
+  console.log('User1 , User2' ,User1 , User2);
+  if(User1 === 'null' && User2 === 'null' )
+  Loggedout = true;
+  if(Loggedout == true)
+  {
+    document.getElementById('logout').style.display = 'none';
+    document.getElementById('dashboard-drop').style.display = 'none';
+  }
+  if(Loggedout == false)
+  {
+    document.getElementById('login-drop').style.display = 'none';
+    document.getElementById('signup-drop').style.display = 'none';
+  }
+  </script>
 
-    if(User1 === 'null' && User2 === 'null' )
-    Loggedout = true;
-
-    if(Loggedout == true)
-    {
-      document.getElementById('logout').style.display = 'none';
-      document.getElementById('dashboard-drop').style.display = 'none';
-    }
-    if(Loggedout == false)
-    {
-      document.getElementById('login-drop').style.display = 'none';
-      document.getElementById('signup-drop').style.display = 'none';
-    }
-
-    </script>
-
-  <script>
-    function onSignIn(googleUser) {
-      var id_token = googleUser.getAuthResponse().id_token;
-      localStorage.setItem('token',id_token);
-      // console.log(id_token);
-      var xhr = new XMLHttpRequest();
-      xhr.open("POST", "/login");
-      xhr.setRequestHeader(
-        "Content-Type",
-        "application/json"
-      );
-      xhr.onload = function () {
-        console.log("Signed in as: " + xhr.responseText);
-        if(xhr.responseText == 'success')
-        {
-          signOut();
-          location.assign('/dashboard');
-          res.set({'Cache-Control': 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0'});
-        }
-      };
-      xhr.send(JSON.stringify({token: id_token}));
-    }
-
-
-    function signOut() {
-      var auth2 = gapi.auth2.getAuthInstance();
-      auth2.signOut().then(function () {
-
-        localStorage.removeItem('token');
-        console.log("User signed out.");
-       
-      });
-    }
-
-    function checkSignIn() {  
-      var xhr = new XMLHttpRequest();
-      xhr.open("GET", "/checksignin");
-      xhr.setRequestHeader(
-        "Content-Type",
-        "application/json"
-      );
-        xhr.onload = function () {
-        console.log("Signed in as: " + xhr.responseText);
-        if(xhr.responseText == 'No token')
-        {
-            swal({
-            title: "Login",
-            text: "You are not logged in!",
-            icon: "error",
-            button: "OK",
-            closeOnClickOutside: false,
-          });
-        }
-        else
-        {
-          swal({
-            title: "Login",
-            text: "You are logged in!",
-            icon: "success",
-            button: "OK",
-            closeOnClickOutside: false,
-          });
-        }
-      };
-      xhr.send('No');
-      
-    }
-    var wasSubmitted = false;    
-    function checkBeforeSubmit(){
-      if(!wasSubmitted) {
-        wasSubmitted = true;
-        return wasSubmitted;
+<script>
+  function onSignIn(googleUser) {
+    var id_token = googleUser.getAuthResponse().id_token;
+    localStorage.setItem('token',id_token);
+    // console.log(id_token);
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/login");
+    xhr.setRequestHeader(
+      "Content-Type",
+      "application/json"
+    );
+    xhr.onload = function () {
+      console.log("Signed in as: " + xhr.responseText);
+      if(xhr.responseText == 'success')
+      {
+        signOut();
+        location.assign('/dashboard');
+        res.set({'Cache-Control': 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0'});
       }
-      return false;
-    }    
-   
-
+    };
+    xhr.send(JSON.stringify({token: id_token}));
+  }
+  function signOut() {
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+      localStorage.removeItem('token');
+      console.log("User signed out.");
+     
+    });
+  }
+  // Function to check google sign -in
+  function checkSignIn() {  
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "/checksignin");
+    xhr.setRequestHeader(
+      "Content-Type",
+      "application/json"
+    );
+      xhr.onload = function () {
+      console.log("Signed in as: " + xhr.responseText);
+      if(xhr.responseText == 'No token')
+      {
+          swal({
+          title: "Login",
+          text: "You are not logged in!",
+          icon: "error",
+          button: "OK",
+          closeOnClickOutside: false,
+        });
+      }
+      else
+      {
+        swal({
+          title: "Login",
+          text: "You are logged in!",
+          icon: "success",
+          button: "OK",
+          closeOnClickOutside: false,
+        });
+      }
+    };
+    xhr.send('No');
+    
+  }
+  // To prevent Multiple submissions
+  var wasSubmitted = false;    
+  function checkBeforeSubmit(){
+    if(!wasSubmitted) {
+      wasSubmitted = true;
+      return wasSubmitted;
+    }
+    return false;
+  }    
+ 
 </script>
-

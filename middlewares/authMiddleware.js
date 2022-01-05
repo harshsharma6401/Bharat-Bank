@@ -9,8 +9,13 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const {OAuth2Client} = require('google-auth-library');
 
 const CLIENT_ID = process.env.CLIENT_ID;
-const client = new OAuth2Client(CLIENT_ID);
+const client = new OAuth2Client(CLIENT_ID);  //Creating Object from class OAuth2Client
 
+//Read about this class at : https://tinyurl.com/OAuth2Client OR
+//https://googleapis.dev/nodejs/google-auth-library/5.5.0/classes/OAuth2Client.html
+
+
+// Making sure the user is logged in (Simple Login)
 const requireAuth = (req,res,next) =>{
     const token = req.cookies.JWT; // JWT is the name of the cookie
     console.log(req.body);
@@ -37,7 +42,7 @@ const requireAuth = (req,res,next) =>{
         res.redirect('/login');
     }
 }
-// Check Current user
+  // Miidleware to check if person is logged in (Simple Login)
 const checkUser = (req,res,next)=>{
     const token = req.cookies.JWT;
     if(token)
@@ -55,7 +60,6 @@ const checkUser = (req,res,next)=>{
                 console.log('Decoded token : ',decodedToken);
                 let user = await User.findById(decodedToken.id);
                 res.locals.user = user;
-                //console.log(typeof res.locals.user);
                 next();
             }
 
@@ -67,12 +71,13 @@ const checkUser = (req,res,next)=>{
         next();
     }
 }
+  // Miidleware to check if person is logged in with Google
 const checkLogin = (req, res, next)=>{
 
     let token = req.cookies['session-token'];
     if(!token)
     {
-      //console.log("No token ");
+     //console.log("No token ");
       res.locals.Googleuser = null;
       next();
     }
@@ -81,10 +86,22 @@ const checkLogin = (req, res, next)=>{
 
     let user = {};
     async function verify() {
-        const ticket = await client.verifyIdToken({
+      
+        //Theory of Login
+        //verifyIdToken is a method of Class OAuth2Client, client is the latter's object
+        //It checks the certs and audience  {Visit : https://tinyurl.com/VerifyIdToken}
+        //Parameter : options, Type : VerifyIdTokenOptions  {Visit : https://tinyurl.com/VerifyIdTokenOptions}
+        //VerifyIdTokenOptions (It is an interface) Properties : audience, idToken, maxExpiry (Optional)
+        //verifyIdToken returns Promise<LoginTicket> .It is a class {Visit : https://tinyurl.com/LoginTicket}
+        // One of its method is getPayload() , which returns TokenPayload 
+        //TokenPayload is an interface having properties : at_hash,aud, azp,email, 
+        //email_verified, exp,given_name,hd,iat, iss, name, picture, profile.
+       
+        const ticket = await client.verifyIdToken({   
             idToken: token,
             audience: CLIENT_ID,  // Specify the CLIENT_ID of the app that accesses the backend
-        });
+        });     
+        console.log("client.verifyIdToken function : " ,ticket);
         const payload = ticket.getPayload();
         user.name = payload.name;
         user.email = payload.email;
@@ -107,7 +124,7 @@ const checkLogin = (req, res, next)=>{
     }
 }
 
-
+// Miidleware to check if user is logged in with Google  / simple Id - Pass & is Registered 
 const checkAuthenticated3 = (req, res, next)=>{
 
     let token = req.cookies['session-token'];
@@ -124,6 +141,7 @@ const checkAuthenticated3 = (req, res, next)=>{
         user.email = payload.email;
         user.picture = payload.picture;
         let username = user.email;
+        
         await User.findOne({email : username},(error,result)=>{
           
           if(error || result ==null)
@@ -178,7 +196,8 @@ const checkAuthenticated3 = (req, res, next)=>{
         }
     }
   }
-  
+
+    // Miidleware to check if user is logged in with Google & is Registered 
 const checkAuthenticated2 = (req, res, next)=>{
 
     let token = req.cookies['session-token'];
@@ -220,7 +239,7 @@ const checkAuthenticated2 = (req, res, next)=>{
       })
   
   }
-
+  // Miidleware to check if person is logged in with Google
   const checkAuthenticated = (req, res, next)=>{ 
     let token = req.cookies['session-token'];
   

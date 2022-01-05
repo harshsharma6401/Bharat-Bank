@@ -8,7 +8,7 @@ const { v4: uuidv4 } = require('uuid');
 const jwt = require('jsonwebtoken');
 const JWT_SECRET = process.env.JWT_SECRET;
 
-
+//Get requests
 
 module.exports.transferMoney_get = (req,res) =>{
     res.render('transfer-money',{title:'Transfer'});
@@ -42,6 +42,7 @@ module.exports.transferMoney_get = (req,res) =>{
       console.log(err);
     });
  }
+
  module.exports.transacHistory_get = (req,res) =>{
     User.find()
     .then((result)=>{
@@ -53,6 +54,7 @@ module.exports.transferMoney_get = (req,res) =>{
     })
  }
 
+//Post requests
 
  module.exports.viewUsers_post = async(req,res) =>{
 

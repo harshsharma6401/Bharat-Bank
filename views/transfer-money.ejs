@@ -1,84 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
-<%-include("./partials/head.ejs") %>
-<head>
-  <link rel="stylesheet" href="/forms.css">
-</head>
-<body class ="form-bg">
-  
+  <%-include("./partials/head.ejs") %>
+  <head>
+    <link rel="stylesheet" href="/forms.css" />
+  </head>
+  <body class="form-bg">
     <%- include('./partials/nav.ejs') %>
- 
 
-<div class="login-form-outer">
-      
-  <form action="/transfer" method ="POST" class = "form" onsubmit="return checkBeforeSubmit()">
-    <div class="title">Transfer Money</div>
-    <div class="subtitle"> It'll feel like blink of an eye</div>
-    <div class="input-container ic2">  
-    <input id="accountNumber" class="input" type="text" placeholder=" " name ="sender" required/>
-      <div class="cut cut-long"></div>
-      <label for="accountNumber" class="placeholder">Account number  of Sender</label>
+    <div class="login-form-outer">
+      <form
+        action="/transfer"
+        method="POST"
+        class="form"
+        onsubmit="return checkBeforeSubmit()"
+      >
+        <div class="title">Transfer Money</div>
+        <div class="subtitle">It'll feel like blink of an eye</div>
+        <div class="input-container ic2">
+          <input
+            id="accountNumber"
+            class="input"
+            type="text"
+            placeholder=" "
+            name="sender"
+            autocomplete="off"
+            required
+          />
+          <div class="cut cut-long"></div>
+          <label for="accountNumber" class="placeholder"
+            >Account number of Sender</label
+          >
+        </div>
+
+        <div class="input-container ic2">
+          <input
+            id="accountNumber"
+            class="input"
+            type="text"
+            placeholder=" "
+            name="reciever"
+            autocomplete="off"
+            required
+          />
+          <div class="cut cut-long"></div>
+          <label for="accountNumber" class="placeholder"
+            >Account number of Reciever</label
+          >
+        </div>
+
+        <div class="input-container ic2">
+          <input
+            id="balance"
+            class="input"
+            type="text"
+            placeholder=" "
+            name="amount"
+            id="balance"
+            autocomplete="off"
+            required
+          />
+          <div class="cut"></div>
+          <label for="balance" class="placeholder"> Amount </label>
+        </div>
+
+        <button type="text" class="submit" name="submit">Submit</button>
+      </form>
     </div>
 
-    <div class="input-container ic2">  
-      <input id="accountNumber" class="input" type="text" placeholder=" " name ="reciever" required/>
-        <div class="cut cut-long"></div>
-        <label for="accountNumber" class="placeholder">Account number  of Reciever</label>
-    </div>
-     
-    <div class="input-container ic2">
-      <input id="balance" class="input" type="text" placeholder=" " name ="amount" id ="balance" required />
-      <div class="cut"></div>
-      <label for="balance" class="placeholder"> Amount </label>
-    </div>
+    <script>
+      let loggedout = false;
+      let user1 = "<%- JSON.stringify(user)%>";
+      let user2 = "<%- JSON.stringify(Googleuser) %>";
 
-      <button type="text" class="submit" name = "submit">Submit</button>
-  </form>
-</div>
+      if (user1 === "null" && user2 === "null") loggedout = true;
 
+      console.log("Logged out : ", loggedout);
+      console.log("user1 and user 2 : ", user1, user2);
 
-
-
-<script>
-  let loggedout = false;
-  let user1 = '<%- JSON.stringify(user)%>';  
-  let user2 = '<%- JSON.stringify(Googleuser) %>';  
-
-  if(user1 === 'null' && user2 === 'null' )
-  loggedout = true;
-
-  console.log('Logged out : ',loggedout);
-  console.log('user1 and user 2 : ',user1,user2);
-
-  
-  if(loggedout == true)
-  {
-    swal({
+      if (loggedout == true) {
+        swal({
           title: "Login",
-          text:  "You are not logged in! ",
+          text: "You are not logged in! ",
           icon: "error",
           button: "OK",
           closeOnClickOutside: false,
-          });
-  }
-  else{
-    swal({
-           title: "Login",
-           text: "You are logged in!",
-           icon: "success",
+        });
+      } else {
+        swal({
+          title: "Login",
+          text: "You are logged in!",
+          icon: "success",
           button: "OK",
-           closeOnClickOutside: false,
-         });
-  }
+          closeOnClickOutside: false,
+        });
+      }
+    </script>
 
-  </script>
-
-
-
-<%- include('./partials/foot.ejs') %>
-
-</body>
-
-
-
+    <%- include('./partials/foot.ejs') %>
+  </body>
 </html>
