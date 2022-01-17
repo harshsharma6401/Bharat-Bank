@@ -56,31 +56,8 @@ module.exports.transferMoney_get = (req,res) =>{
 
 //Post requests
 
- module.exports.viewUsers_post = async(req,res) =>{
 
-    let last_user;
-  
-    last_user = await User.findOne().sort({ field: 'asc', _id: -1 }).limit(1);
-    console.log(last_user);
-    
-    req.body.accountNumber = last_user.accountNumber + 1;
-    const user = new User(req.body);
 
-    user.save()
-    .then((result)=>{
-      res.redirect('/all-users');     
-    })
-    .catch((err)=>{
-  
-       console.log(err);
-        if(err.code == '11000')
-        {
-        console.log("Cannot add duplicate user");
-        res.render('404',{title :'404', message :"Cannot add duplicate user"});
-        }
-      
-    })
-}
 module.exports.transfer_post = async(req,res,) =>{
     const { sender, reciever, amount } = req.body;
     console.log(req.body);

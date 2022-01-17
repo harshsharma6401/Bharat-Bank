@@ -151,11 +151,7 @@
   .password.error , .email.error{
     color:#dc2f55;
   }
-
   
-
-
-
   @media screen and (max-width: 767px) {
 
     .login-form-outer{

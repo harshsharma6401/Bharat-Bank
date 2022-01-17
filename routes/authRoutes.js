@@ -9,6 +9,8 @@ router.get('/sign-up',authController.signUp_get); //This is same  as add user
 
 router.post('/signup',authController.signup_post);
 
+router.post('/view-users',authController.viewUsers_post);  // For registering a user / Sign - up
+
 router.get('/login',authController.login_get); // Both login and login to will redirect to same page
 
 router.get('/login2',authController.login2_get); 

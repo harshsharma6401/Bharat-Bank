@@ -34,10 +34,10 @@ const handleErrors = (err) => {
   }
 
   // Validation errors
-  if (err.message.includes("user validation failed")) {
+  if (err.message.includes("User validation failed")) {
     Object.values(err.errors).forEach(({ properties }) => {
       errors[properties.path] = properties.message;
-
+      //console.log('Handling Error : ',errors[properties.path], properties.message);
       //properties.path either   refer to email / password .
       // properties.message is the error message (Specific , acc to email/ password)
     });
@@ -119,6 +119,7 @@ module.exports.signup_post = async (req, res) => {
       httponly: true,
       maxAge: max_Age * 1000,
       SameSite: "None",
+      Secure : true
     }); //maxAge field takes input in miliseconds
 
     console.log("User created : ", user);
@@ -129,6 +130,48 @@ module.exports.signup_post = async (req, res) => {
     res.status(400).json({ errors });
   }
 };
+
+module.exports.viewUsers_post = async (req, res) => {
+  let last_user;
+
+  last_user = await User.findOne().sort({ field: "asc", _id: -1 }).limit(1);
+  console.log(last_user);
+
+  if(!last_user)
+  {
+      
+    last_user = {}; 
+    last_user.accountNumber = 980001;
+  
+  }
+
+  req.body.accountNumber = last_user.accountNumber + 1;
+  //req.body.balance = Number(req.body.balance);
+  //req.body.balance = Number(req.body.balance);
+
+  try {
+    const user = await User.create(req.body);
+
+    const token = createToken(user._id);
+
+    res.cookie("JWT", token, {
+      httponly: true,
+      maxAge: max_Age * 1000,
+      SameSite: "None",
+      Secure: true,
+    }); //maxAge field takes input in miliseconds
+
+    console.log("User created : ", user);
+
+    res.status(201).json({ user: user._id });
+  } catch (err) {
+    //console.log(err);
+    const errors = handleErrors(err);
+    res.status(400).json({ errors });
+  }
+
+};
+
 
 module.exports.login_post = async (req, res) => {
   let token = req.body.token;

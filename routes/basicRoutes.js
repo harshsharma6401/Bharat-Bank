@@ -12,8 +12,6 @@ const {checkUser,checkAuthenticated3,checkLogin} = require('../middlewares/authM
 
  router.get('/add-user',basicController.addUser_get);
 
- router.post('/view-users',basicController.viewUsers_post);  // For registering a user / Sign - up
-
  router.get('/view-users',basicController.viewUsers_get);
 
  router.get('/all-users',basicController.allUsers_get);

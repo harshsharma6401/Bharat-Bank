@@ -194,7 +194,7 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-.create-user input[type=text], input[type=number],input[type=password] {
+.create-user input[type=text], .create-user  input[type=number], .create-user input[type=password] {
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
