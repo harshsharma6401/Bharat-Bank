@@ -27,9 +27,9 @@ These are stored in JSON format.
 The header has two keys: type and algorithm. 
 Payload is the part where actual data is stored.
 The **signature** is present to verify the authenticity of the token.
+
+
 ![jwt-33](https://user-images.githubusercontent.com/71374972/168766906-2418c24a-a13e-40a9-b96d-edff762bf3c5.png)
-
-
 
 
 # Landing Page
