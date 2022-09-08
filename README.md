@@ -44,7 +44,7 @@ The **signature** is present to verify the authenticity of the token.
 
 ![Bharat bank-2](https://user-images.githubusercontent.com/71374972/168759657-3c156712-dcbd-440a-bf58-45cd2994ccfb.png)
 
-The user can perform the  transaction of transer money in the application. The user must be logged in to make a transaction.
+The user can perform the  transaction of transfer money in the application. The user must be logged in to make a transaction.
 The Account number and Email ID of the user is verified at the backend to make a transaction.
 A error message will be displayed and transaction will be aborted in case of a problem in verification or problem with amount.
 
